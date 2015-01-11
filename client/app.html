@@ -1,0 +1,97 @@
+<template name="layout">
+	<div class="container">
+		<!-- header -->
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="{{pathFor 'home'}}">OpenAVL</a>
+				</div>
+				<div class="collapse navbar-collapse" id="navigation">
+					<ul class="nav navbar-nav">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Sort
+								<b class="caret"></b>
+							</a>
+<!--
+							<ul class="dropdown-menu">
+								<li>
+									<a href="{{pathFor 'newPosts'}}">Newest</a>
+								</li>
+								<li>
+									<a href="{{pathFor 'topPosts'}}">Top Voted</a>
+								</li>
+							</ul>
+-->
+						</li>
+<!--
+						{{#if currentUser}}
+							<li class="dropdown">
+								{{> notifications}}
+							</li>
+							<li><a href="{{pathFor 'createPost'}}">Create Post</a></li>
+						{{/if}}
+-->					</ul>
+
+					<ul class="nav navbar-nav navbar-right">
+						{{> loginButtons}}
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<!-- error display
+		{{> errors}}-->
+
+		<!-- main app area -->
+		<div id="main" class="row-fluid">
+			{{> yield}}
+		</div>
+	</div>
+</template>
+
+<!-- generic loading indicator -->
+<template name="loading">
+	{{>spinner}}
+</template>
+
+<!-- 404 page -->
+<template name="notFound">
+	<div class="not-found jumbotron">
+		<h2>404</h2>
+		<p>Sorry, we couldn't find a page at this address.</p>
+	</div>
+</template>
+
+<!-- user needs to be logged in to do something -->
+<template name="accessDenied">
+	<div class="access-denied jumbotron">
+		<h2>Access Denied</h2>
+		<p>Please log in.</p>
+	</div>
+</template>
+
+
+
+<!-- Error template(s)
+<template name="errors">
+	<div class="errors">
+		{{#each errors}}
+			{{> error}}
+		{{/each}}
+	</div>
+</template>
+
+<template name="error">
+	<div class="alert alert-danger" role="alert">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		{{message}}
+	</div>
+</template>
+-->
