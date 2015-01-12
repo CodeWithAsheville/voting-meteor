@@ -1,6 +1,6 @@
 //////////////////////////////
 //
-//	Test data & rudamentary unit tests
+//	Test data & rudamentary smoke test for internal APIs
 //
 //////////////////////////////
 if (Topics.find().count() === 0) {
