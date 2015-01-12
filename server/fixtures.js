@@ -57,7 +57,7 @@ if (Topics.find().count() === 0) {
 
 	// Have owen change title of his own record.
 	try {
-		Topics.editTopic(landlordId, {title:"Landlord rental records"}, owen);
+		Topics.editTopic(landlordId, {description:"Complaints of both landlords and renters"}, owen);
 		console.info("YAY!  Owen can change his own record!");
 	} catch (e) {
 		console.warn("BOO!  Error updating record:", e.reason || e);
