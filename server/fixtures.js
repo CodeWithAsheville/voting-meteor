@@ -204,11 +204,12 @@ if (Topics.find().count() === 0) {
 	} catch (e) {
 		console.warn("BOO!  Owen is unable to upvote his topic again: ", e.reason || e);
 	}
-	var count = Topics.findOne(landlordId).voteCount;
-	if (count === 2) {
-		console.info("YAY!  vote count is 2 as expected.");
+	var voteCount = Topics.findOne(landlordId).voteCount;
+	var voters = Topics.getVoters(landlordId);
+	if (voteCount === voters.length) {
+		console.info("YAY!  voteCount matches the number of voters ("+voteCount+").");
 	} else {
-		console.warn("BOO!  expected vote count of 2, found: ", count);
+		console.warn("BOO!  expected voteCount of ",voters.length,", found: ", voteCount);
 	}
 
 
@@ -233,6 +234,13 @@ if (Topics.find().count() === 0) {
 		else		 console.warn("BOO!  Bob is unable to subscribe to owen's topic.");
 	} catch (e) {
 		console.warn("BOO!  Bob is unable to subscribe to owen's topic.", e.reason || e);
+	}
+
+	var subscribers = Topics.getSubscribers(landlordId);
+	if (subscribers.length === 2) {
+		console.info("YAY!  2 subscribers to topic as expected.");
+	} else {
+		console.warn("BOO!  Expected 2 subscribers to topic, found ",subscribers.length, " data:",subscribers);
 	}
 
 	// have owen try to subscribe to his own topic -- which should fail.
@@ -260,4 +268,43 @@ if (Topics.find().count() === 0) {
 		console.warn("BOO!  Owen is unable to subscribe to his topic again: ", e.reason || e);
 	}
 
+
+
+
+	//////////
+	// Comments
+	//////////
+
+	console.info("Testing comments");
+	// try to comment on a bogus topic
+	try {
+		var success = TopicComments.createComment("BOGUS_TOPIC", {comment:"YAY!"}, owen);
+		if (success) console.info("BOO!  Able to comment on a bogus topic!");
+		else		 console.warn("YAY!  Unable to comment on bogus topic.");
+	} catch (e) {
+		console.info("YAY!  Unable comment on bogus topic.  ", e.reason || e);
+	}
+
+	// have Bob comment on owen's post 2 times
+	try {
+		var success = TopicComments.createComment(landlordId, {comment:"YAY 2!"}, bob);
+		if (success) console.info("YAY!  Bob is able to comment on owen's topic.");
+		else		 console.warn("BOO!  Bob is unable to comment on owen's topic.");
+	} catch (e) {
+		console.warn("BOO!  Bob is unable to comment on owen's topic.", e.reason || e);
+	}
+	try {
+		var success = TopicComments.createComment(landlordId, {comment:"YAY 3!"}, bob);
+		if (success) console.info("YAY!  Bob is able to comment on owen's topic.");
+		else		 console.warn("BOO!  Bob is unable to comment on owen's topic.");
+	} catch (e) {
+		console.warn("BOO!  Bob is unable to comment on owen's topic.", e.reason || e);
+	}
+
+	var commentCount = Topics.findOne(landlordId).commentCount;
+	if (commentCount === 2) {
+		console.info("YAY!  2 comments on topic as expected.");
+	} else {
+		console.warn("BOO!  Expected 2 comments on topic, found ",commentCount);
+	}
 }
