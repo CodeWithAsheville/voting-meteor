@@ -48,6 +48,12 @@
 						Edit 
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
+				{{/if}}	
+				{{#if isAdmin}}
+					<a href="{{pathFor 'mergeTopic'}}" class="merge btn btn-default">
+						Merge 
+						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+					</a>
 				{{/if}}				
 			</div>
 		{{/if}}
