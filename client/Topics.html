@@ -22,6 +22,12 @@
 		<div class="topic-content">
 			<h3><a href="{{pathFor 'topicPage'}}">{{title}}</a></h3>
 			<p>"{{trimString description 100}}"</p>
+				<div class="reference-url">
+					{{ #if reference_url }}
+						Reference: 
+						<a href="{{ reference_url }}">{{ reference_url }}</a>
+					{{/if}}
+				</div>
 			<div class='details'>
 				{{pluralize voteCount "vote" "votes"}},
 				submitted by {{author}},
