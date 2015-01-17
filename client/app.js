@@ -18,6 +18,10 @@ UI.registerHelper("pluralize", function(count, singular, plural) {
 	return count + " " +plural;
 });
 
+UI.registerHelper("dateTime", function(date) {
+	if (!date || !date.toLocaleDateString) return "";
+	return date.toLocaleDateString() + " at " + date.toLocaleTimeString();
+});
 
 
 

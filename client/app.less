@@ -146,8 +146,6 @@ ul.comments {
 
 	.alert {
 		animation: fadeOut 2700ms ease-in 0s 1 forwards;
-		-webkit-animation: fadeOut 2700ms ease-in 0s 1 forwards;
-		-moz-animation: fadeOut 2700ms ease-in 0s 1 forwards;
 		width: 250px;
 		float: right;
 		clear: both;
@@ -155,4 +153,26 @@ ul.comments {
 		pointer-events: auto;
 	}
 
+}
+@keyframes fadeOut {
+	0% {opacity: 0;}
+	10% {opacity: 1;}
+	90% {opacity: 1;}
+	100% {opacity: 0;}
+}
+
+
+
+//////////////////////////////////
+//
+//	Bootstrap overrides
+//
+//////////////////////////////////
+.jumbotron{
+	text-align: center;
+	background-color:transparent;
+}
+.jumbotron h2{
+	font-size: 4em;
+	font-weight: 100;
 }

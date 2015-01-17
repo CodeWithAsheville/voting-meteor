@@ -29,7 +29,7 @@
 		<div class="topic-content">
 			<h3><a href="{{pathFor 'topicPage'}}">{{title}}</a></h3>
 			<div class='details'>
-				{{pluralize votes "vote" "votes"}},
+				{{pluralize voteCount "vote" "votes"}},
 				submitted by {{author}},
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
 			</div>

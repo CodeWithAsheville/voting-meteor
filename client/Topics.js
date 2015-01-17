@@ -4,10 +4,6 @@
 //
 //////////////////////////////
 Template.topics.helpers({
-	topics : function() {
-		// `this` is the topic
-		return Topics.find();
-	}
 
 });
 
@@ -18,6 +14,9 @@ Template.topics.helpers({
 //
 //////////////////////////////
 Template.topicItem.helpers({
+	creationTime : function() {
+		return this.created.getTime();
+	},
 
 	// Does the logged in user own this topic?
 	isOwnTopic: function() {
