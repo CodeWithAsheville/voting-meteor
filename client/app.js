@@ -9,6 +9,18 @@ UI.registerHelper("isLoggedIn", function() {
 	return (typeof Meteor.userId() === "string");
 });
 
+UI.registerHelper("isAdmin", function(user) {
+	var user = Meteor.user();
+	console.log(user._id);
+
+	// PRC Testing for a specific ID
+	if(user._id == 'z4Svc2ZeK7dvT5zFo'){
+		console.log('success admin');
+		return true;
+	}
+	return user.isAdmin();
+});
+
 // Simple pluralizer, eg: 	`{{pluralize votes "vote" "votz"}}`
 // If you don't pass the `plural` argument, we'll just add `s` to the `singular`.
 UI.registerHelper("pluralize", function(count, singular, plural) {

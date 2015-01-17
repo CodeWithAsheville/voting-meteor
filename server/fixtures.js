@@ -15,9 +15,10 @@ if (Topics.find().count() === 0) {
 	var owen = Meteor.users.findOne(owenId);
 
 	var landlordId = Topics.createTopic(owen, {
-		title		: "Landlord complaints",
-		description	: "Complaints of renters against their landlords",
-		tags		: "housing"
+		title			: "Landlord complaints",
+		description		: "Complaints of renters against their landlords",
+		reference_url	: "http://www.codeforasheville.org",
+		tags			: "housing"
 	});
 	console.warn("LANDLORD ID: ",landlordId);
 

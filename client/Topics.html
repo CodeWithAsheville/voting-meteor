@@ -48,6 +48,12 @@
 						Edit 
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
+				{{/if}}	
+				{{#if isAdmin}}
+					<a href="{{pathFor 'mergeTopic'}}" class="merge btn btn-default">
+						Merge 
+						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+					</a>
 				{{/if}}				
 			</div>
 		{{/if}}
@@ -110,6 +116,13 @@
 			<div class="controls">
 				<input name="description" id="description" type="text" value="{{description}}" placeholder="Description of your topic" class="form-control"/>
 				<span class='help-block'>{{errorMessage 'description'}}</span>
+			</div>
+		</div>
+		<div class="form-group {{errorClass 'title'}}">
+			<label class="control-label" for="title">Reference URL:</label>
+			<div class="controls">
+				<input name="reference_url" id="reference_url" type="text" value="{{reference_url}}" placeholder="Provide a reference URL (optional)" class="form-control"/>
+				<span class='help-block'>{{errorMessage 'reference_url'}}</span>
 			</div>
 		</div>
 		<input type="submit" value="Save" class="btn btn-primary submit"/>
