@@ -83,15 +83,11 @@ Template.createTopic.events({
 		}
 
 		// Call a custom method on the server to insert.
+		// `result` is topic id
 		Meteor.call("createTopic", topic, function(error, result) {
 			// display error to user if there's a problem and abort
 			if (error) {
 				return throwError(error.reason);
-			}
-
-			// if a topic with the specified title already exists, let them know
-			if (result.topicExists) {
-				throwError("This link has already been topiced.");
 			}
 			Router.go("topicPage", {_id:result._id});
 		});
@@ -150,7 +146,7 @@ Template.editTopic.events({
 			if (error) {
 				return throwError(error.reason);
 			}
-			Router.go("topicPage", {_id:currentTopicId});
+			Router.go("topicPage", {_id:result._id});
 		});
 	},
 
