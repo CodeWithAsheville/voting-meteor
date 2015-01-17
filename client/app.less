@@ -71,6 +71,20 @@ body {
 	.actions {
 		clear: both;
 		display:block;
+		overflow:hidden;
+	}
+	.topic-content{
+		margin-bottom: 10px;
+		p{
+			padding: 10px 0px;
+			color: #666;
+			font-family: "Georgia";
+			min-height: 80px;
+		}
+	}
+	.reference-url{
+		min-height:1.5em;
+		font-size: .9em;
 	}
 
 }
@@ -81,10 +95,17 @@ body {
 //	Comments display
 //
 //////////////////////////////////
+.comments-container{
+	clear:both;
+	display:block;
+	padding-top: 30px; 
+}
+
 ul.comments {
 	clear:both;
 	list-style-type: none;
 	margin:0;
+	padding-left: 0px;
 
 	// single comment
 	li {

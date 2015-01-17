@@ -23,6 +23,11 @@ Template.topicItem.helpers({
 		return this.authorId === Meteor.userId();
 	},
 
+	// Does the logged in user own this topic?
+	isOwnTopicOrAdmin: function() {
+		return this.authorId === Meteor.userId() || User.isAdmin(Meteor.user() );
+	},
+
 	// Have we already voted for this topic?
 	hasAlreadyVoted : function() {
 		// `this` is the topic
@@ -74,7 +79,9 @@ Template.createTopic.events({
 		// Get data from the form
 		var topic = {
 			description: $(e.target).find('[name=description]').val(),
-			title: $(e.target).find('[name=title]').val()
+			title: $(e.target).find('[name=title]').val(),
+			reference_url :  $(e.target).find('[name=reference_url]').val()
+
 		};
 
 		var errors = Topics.validateAttributes(topic);
@@ -132,7 +139,8 @@ Template.editTopic.events({
 		var currentTopicId = this._id;
 		var topicProperties = {
 			description 	: $(e.target).find("[name=description]").val(),
-			title			: $(e.target).find("[name=title]").val()
+			title			: $(e.target).find("[name=title]").val(),
+			reference_url	: $(e.target).find("[name=reference_url]").val()
 		};
 
 		var errors = Topics.validateAttributes(topicProperties);
@@ -177,6 +185,67 @@ Template.editTopic.created = function() {
 
 // Show errors as necessary in the editTopic form.
 Template.editTopic.helpers({
+	errorMessage: function(field) {
+		return Session.get("editTopicErrors")[field];
+	},
+	errorClass : function(field) {
+		return (Session.get("editTopicErrors")[field] ? "has-error" : "");
+	}
+});
+
+
+//////////////////////////////
+//
+//	mergeTopic template
+//
+//////////////////////////////
+Template.mergeTopic.events({
+	// Save button.
+	'submit form': function(e) {
+		// NOTE: `this` is the existing topic
+		e.preventDefault();
+
+		var currentTopicId = this._id;
+		var topicProperties = {
+			childTopicID	: $(e.target).find("[name=child_topic_id]").val()
+		};
+
+		console.log(currentTopicId);
+		console.log(topicProperties.childTopicID);
+
+
+
+		// var errors = Topics.validateAttributes(topicProperties);
+		// if (errors.title || errors.description) {
+		// 	return Session.set("editTopicErrors", errors);
+		// }
+
+		// // Call a custom method on the server to insert.
+		// Meteor.call("editTopic", currentTopicId, topicProperties, function(error, result) {
+		// 	// display error to user if there's a problem and abort
+		// 	if (error) {
+		// 		return throwError(error.reason);
+		// 	}
+		// 	Router.go("topicPage", {_id:result._id});
+		// });
+	},
+
+	// Cancel button.
+	"click .cancel":function(e) {
+		// `this` is the existing topic
+		e.preventDefault();
+		var currentTopicId = this._id;
+		Router.go("topicPage", {_id:currentTopicId});
+	},
+});
+
+// Clear errors when we create the creatTopic form.
+Template.mergeTopic.created = function() {
+	Session.set("editTopicErrors", {});
+}
+
+// Show errors as necessary in the editTopic form.
+Template.mergeTopic.helpers({
 	errorMessage: function(field) {
 		return Session.get("editTopicErrors")[field];
 	},
