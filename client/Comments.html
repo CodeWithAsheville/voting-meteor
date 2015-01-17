@@ -1,0 +1,30 @@
+<template name="commentItem">
+	<li>
+		<h4>
+			<span class="author">{{author}}</span>
+			<span class="date">{{createdAsText}}</span>
+		</h4>
+		<p class='body'>{{comment}}</p>
+	</li>
+</template>
+
+<template name="embedCommentForm">
+	{{#if currentUser}}
+		{{> createComment}}
+	{{else}}
+		<p>Please sign in to leave a comment.</p>
+	{{/if}}
+</template>
+
+<template name="createComment">
+	<form name="comment" class="comment-form form">
+		<div class="form-group {{errorClass 'body'}}">
+			<div class="controls">
+				<label for="body">Comment on this post</label>
+				<textarea name="body" id="body" class="form-control" rows="3"></textarea>
+				<span class="help-block">{{errorMessage 'body'}}</span>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary">Add Comment</button>
+	</form>
+</template>

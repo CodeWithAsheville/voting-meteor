@@ -1,0 +1,158 @@
+body {
+	background: #fafafa;
+	color: #333;
+}
+
+.navbar {
+	margin-bottom: 10px;
+}
+
+
+//////////////////////////////////
+//
+//	Macros
+//
+//////////////////////////////////
+.panel {
+	background: #fff;
+	border-radius: 3px;
+	padding: 10px;
+	margin-bottom: 10px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+
+
+//////////////////////////////////
+//
+//	Single topic display
+//
+//////////////////////////////////
+.topic {
+	.panel();
+	position:relative;
+
+	& > * {
+		display:inline-block;
+	}
+
+	&:after {
+		clear:both;
+	}
+
+	h3 {
+		margin: 0;
+		font-size: 1.4em;
+		line-height: 1.4;
+	}
+
+	p {
+		margin:0;
+	}
+
+	.voteBtn {
+		display: block;
+		margin: 7px 12px 0 0;
+		float: left;
+		width:3em;
+
+		&.alreadyVoted {
+			font-size:3em;
+			line-height:.3em;
+		}
+	}
+
+	.edit,
+	.discuss {
+		display: block;
+		float: right;
+		margin-top: 7px;
+		margin-left:10px;
+	}
+
+}
+
+
+//////////////////////////////////
+//
+//	Comments display
+//
+//////////////////////////////////
+ul.comments {
+	list-style-type: none;
+	margin:0;
+
+	// single comment
+	li {
+		.panel();
+
+		h4 {
+			font-size: 16px;
+			margin: 0;
+		}
+		.date {
+			float:right;
+			font-size: 12px;
+			font-weight: normal;
+		}
+		a {
+			font-size: 12px;
+		}
+
+		.body {
+			&:before	{content: "\201C  "; font-size:1.5em; color:#aaa;}
+			&:after		{content: " \201D"; font-size:1.5em; color:#aaa;}
+		}
+
+		p:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
+
+
+
+//////////////////////////////////
+//
+//	Menus
+//
+//////////////////////////////////
+.dropdown-menu {
+	span {
+		display: block;
+		padding: 3px 20px;
+		clear: both;
+		line-height: 20px;
+		color: #bbb;
+		white-space: nowrap;
+	}
+}
+
+
+//////////////////////////////////
+//
+//	Error display
+//
+//////////////////////////////////
+.errors {
+	position: fixed;
+	z-index: 10000;
+	padding: 10px;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	pointer-events: none;
+
+	.alert {
+		animation: fadeOut 2700ms ease-in 0s 1 forwards;
+		-webkit-animation: fadeOut 2700ms ease-in 0s 1 forwards;
+		-moz-animation: fadeOut 2700ms ease-in 0s 1 forwards;
+		width: 250px;
+		float: right;
+		clear: both;
+		margin-bottom: 5px;
+		pointer-events: auto;
+	}
+
+}
