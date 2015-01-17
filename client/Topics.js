@@ -13,7 +13,7 @@ Template.topics.helpers({
 //	topicItem template
 //
 //////////////////////////////
-Template.topicItem.helpers({
+var itemHelpers = {
 	creationTime : function() {
 		return this.created.getTime();
 	},
@@ -40,9 +40,11 @@ Template.topicItem.helpers({
 		// check if that contains the topic id
 		return votes.indexOf(this._id) > -1;
 	},
-});
+};
+Template.topicItem.helpers(itemHelpers);
+Template.singleTopic.helpers(itemHelpers);
 
-Template.topicItem.events({
+var itemEvents = {
 	"click .upvote" : function(e) {
 		e.preventDefault();
 		Meteor.call("upvoteTopic", this._id, function(error, result) {
@@ -51,7 +53,9 @@ Template.topicItem.events({
 			}
 		});
 	}
-});
+}
+Template.topicItem.events(itemEvents);
+Template.singleTopic.events(itemEvents);
 
 //////////////////////////////
 //
