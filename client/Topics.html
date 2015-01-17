@@ -63,7 +63,7 @@
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
 				{{/if}}
-			</div>				
+			</div>
 		{{/if}}
 	</div>
 </template>
@@ -171,7 +171,7 @@
 		<div class="form-group {{errorClass 'description'}}">
 			<label class="control-label" for="description">Description</label>
 			<div class="controls">
-				<input name="description" id="description" type="text" value="{{description}}" placeholder="Description of your topic" class="form-control"/>
+				<textarea name="description" id="description" type="text" placeholder="Description of your topic" class="form-control">{{description}}</textarea>
 				<span class='help-block'>{{errorMessage 'description'}}</span>
 			</div>
 		</div>
