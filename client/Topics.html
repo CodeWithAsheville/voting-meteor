@@ -55,13 +55,15 @@
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
 				{{/if}}
+			</div>
+			<div class="admin-actions">
 				{{#if isAdmin}}
-					<a href="{{pathFor 'mergeTopic'}}" class="merge btn btn-default">
+					<a href="{{pathFor 'mergeTopic'}}" class="merge btn btn-success">
 						Merge
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
 				{{/if}}
-			</div>
+			</div>				
 		{{/if}}
 	</div>
 </template>

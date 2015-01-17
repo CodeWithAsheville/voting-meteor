@@ -16,7 +16,7 @@ if (Topics.find().count() === 0) {
 
 	var adminId = Accounts.createUser({
         username	: 'admin',
-        email		: 'admin@codeforasheville.org',
+        email		: 'admin@cfa.org',
         password	: 'admin',
         roles		: ['admin']
     });
