@@ -24,7 +24,7 @@
 			<p>"{{trimString description 100}}"</p>
 				<div class="reference-url">
 					{{ #if reference_url }}
-						Reference: 
+						Reference:
 						<a href="{{ reference_url }}">{{ reference_url }}</a>
 					{{/if}}
 				</div>
@@ -33,7 +33,7 @@
 				submitted by {{author}},
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
 			</div>
-		</div>		
+		</div>
 		{{#if isLoggedIn}}
 			<div class="actions btn-group">
 				{{#if hasAlreadyVoted}}
@@ -42,25 +42,25 @@
 					</a>
 				{{else}}
 					<a href="#" class="voteBtn upvote btn btn-default">
-						Vote Up 
+						Vote Up
 						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
 					</a>
-				{{/if}}		
-				<a href="{{pathFor 'topicPage'}}" class="discuss btn btn-default">	  Discuss 
+				{{/if}}
+				<a href="{{pathFor 'topicPage'}}" class="discuss btn btn-default">	  Discuss
 					<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
 				</a>
 				{{#if isOwnTopicOrAdmin}}
 					<a href="{{pathFor 'editTopic'}}" class="edit btn btn-default">
-						Edit 
+						Edit
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
-				{{/if}}	
+				{{/if}}
 				{{#if isAdmin}}
 					<a href="{{pathFor 'mergeTopic'}}" class="merge btn btn-default">
-						Merge 
+						Merge
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
-				{{/if}}				
+				{{/if}}
 			</div>
 		{{/if}}
 	</div>
@@ -72,7 +72,7 @@
 	{{> topicItem}}
 	<div class="comments-container">
 		<h4>
-			Comments 
+			Comments
 			<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
 		</h4>
 		<ul class="comments">
@@ -93,7 +93,7 @@
 			<div class="controls">
 				<input name="title" id="title" type="text" value="" placeholder="Name your topic" class="form-control"/>
 				<span class='help-block'>{{errorMessage 'title'}}</span>
-			</div> 
+			</div>
 		</div>
 		<div class="form-group {{errorClass 'description'}}">
 			<label class="control-label" for="description">Description</label>

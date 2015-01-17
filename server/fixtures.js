@@ -14,14 +14,15 @@ if (Topics.find().count() === 0) {
     });
 	var owen = Meteor.users.findOne(owenId);
 
-	var adminID = Accounts.createUser({
+	var adminId = Accounts.createUser({
         username	: 'admin',
         email		: 'admin@codeforasheville.org',
-        password	: 'GEUY32ab',
+        password	: 'admin',
         roles		: ['admin']
     });
 
-	var admin = Meteor.users.findOne(adminID);
+	var admin = Meteor.users.findOne(adminId);
+	User.makeAdmin(adminId);
 
 	var landlordId = Topics.createTopic(owen, {
 		title			: "Landlord complaints",
