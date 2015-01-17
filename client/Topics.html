@@ -49,7 +49,7 @@
 				<a href="{{pathFor 'topicPage'}}" class="discuss btn btn-default">	  Discuss 
 					<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
 				</a>
-				{{#if isOwnTopic}}
+				{{#if isOwnTopicOrAdmin}}
 					<a href="{{pathFor 'editTopic'}}" class="edit btn btn-default">
 						Edit 
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>

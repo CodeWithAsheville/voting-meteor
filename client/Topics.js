@@ -23,6 +23,11 @@ Template.topicItem.helpers({
 		return this.authorId === Meteor.userId();
 	},
 
+	// Does the logged in user own this topic?
+	isOwnTopicOrAdmin: function() {
+		return this.authorId === Meteor.userId() || User.isAdmin(Meteor.user() );
+	},
+
 	// Have we already voted for this topic?
 	hasAlreadyVoted : function() {
 		// `this` is the topic
@@ -208,7 +213,7 @@ Template.mergeTopic.events({
 		console.log(currentTopicId);
 		console.log(topicProperties.childTopicID);
 
-		
+
 
 		// var errors = Topics.validateAttributes(topicProperties);
 		// if (errors.title || errors.description) {

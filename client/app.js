@@ -11,16 +11,8 @@ UI.registerHelper("isLoggedIn", function() {
 
 UI.registerHelper("isAdmin", function(user) {
 	var user = Meteor.user();
-	console.log(user._id);
-
-	// PRC Testing for a specific ID
-	if(user._id == 'z4Svc2ZeK7dvT5zFo'){
-		console.log('success admin');
-		return true;
-	}
-	else{
-		return User.isAdmin(user);
-	}
+	
+	return User.isAdmin(user);	
 });
 
 // Simple pluralizer, eg: 	`{{pluralize votes "vote" "votz"}}`
