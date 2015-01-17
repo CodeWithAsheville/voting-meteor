@@ -16,7 +16,7 @@ Template.commentItem.helpers({
 //
 //////////////////////////////
 
-// Clear errors when we create the creatPost form.
+// Clear errors when we create the creatTopic form.
 Template.createComment.created = function() {
 	Session.set("createCommentErrors", {});
 }
@@ -37,26 +37,25 @@ Template.createComment.events({
 		e.preventDefault();
 
 		// Prepare the data to post
-		var $body = $(e.target).find("[name=body]");
+		var $comment = $(e.target).find("[name=comment]");
 		var comment = {
-			body 	: $body.val().trim(),
-			postId	: template.data._id
+			comment 	: $comment.val().trim()
 		}
 
 		// make sure they actually typed something
 		var errors = {};
-		if (!comment.body) {
-			errors.body = "Please write something.";
+		if (!comment.comment) {
+			errors.comment = "Please write something.";
 			return Session.set("createCommentErrors", errors);
 		}
 
 		// Call server "insertComment" method
-		Meteor.call("createTopicComment", comment, function(error, commentId) {
+		Meteor.call("createTopicComment", template.data._id, comment, function(error, result) {
 			if (error) {
 				throwError(error.reason);
 			} else {
 				// clear field to prepare for next comment
-				$body.val("");
+				$comment.val("");
 			}
 		});
 	}
