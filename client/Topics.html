@@ -131,3 +131,23 @@
 	</form>
 </template>
 
+
+<!-- merge existing topic -->
+<template name="mergeTopic">
+	<form class="main form">
+		<div class="form-group {{errorClass 'title'}}">
+			<label class="control-label" for="title">Parent Topic</label>
+			{{title}}
+		</div>
+		<div class="form-group {{errorClass 'description'}}">
+			<label class="control-label" for="description">Child Topic ID</label>
+			<div class="controls">
+				<input name="child_topic_id" id="child_topic_id" type="text" value="{{child_topic_id}}" placeholder="ID of the child topic" class="form-control"/>
+				<span class='help-block'>{{errorMessage 'child_topic_id'}}</span>
+			</div>
+		</div>
+		<input type="submit" value="Save" class="btn btn-primary submit"/>
+		<input type="submit" value="Cancel" class="btn cancel"/>
+	</form>
+</template>
+

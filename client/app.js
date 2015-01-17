@@ -18,7 +18,9 @@ UI.registerHelper("isAdmin", function(user) {
 		console.log('success admin');
 		return true;
 	}
-	return user.isAdmin();
+	else{
+		return User.isAdmin(user);
+	}
 });
 
 // Simple pluralizer, eg: 	`{{pluralize votes "vote" "votz"}}`

@@ -187,3 +187,64 @@ Template.editTopic.helpers({
 		return (Session.get("editTopicErrors")[field] ? "has-error" : "");
 	}
 });
+
+
+//////////////////////////////
+//
+//	mergeTopic template
+//
+//////////////////////////////
+Template.mergeTopic.events({
+	// Save button.
+	'submit form': function(e) {
+		// NOTE: `this` is the existing topic
+		e.preventDefault();
+
+		var currentTopicId = this._id;
+		var topicProperties = {
+			childTopicID	: $(e.target).find("[name=child_topic_id]").val()
+		};
+
+		console.log(currentTopicId);
+		console.log(topicProperties.childTopicID);
+
+		
+
+		// var errors = Topics.validateAttributes(topicProperties);
+		// if (errors.title || errors.description) {
+		// 	return Session.set("editTopicErrors", errors);
+		// }
+
+		// // Call a custom method on the server to insert.
+		// Meteor.call("editTopic", currentTopicId, topicProperties, function(error, result) {
+		// 	// display error to user if there's a problem and abort
+		// 	if (error) {
+		// 		return throwError(error.reason);
+		// 	}
+		// 	Router.go("topicPage", {_id:result._id});
+		// });
+	},
+
+	// Cancel button.
+	"click .cancel":function(e) {
+		// `this` is the existing topic
+		e.preventDefault();
+		var currentTopicId = this._id;
+		Router.go("topicPage", {_id:currentTopicId});
+	},
+});
+
+// Clear errors when we create the creatTopic form.
+Template.mergeTopic.created = function() {
+	Session.set("editTopicErrors", {});
+}
+
+// Show errors as necessary in the editTopic form.
+Template.mergeTopic.helpers({
+	errorMessage: function(field) {
+		return Session.get("editTopicErrors")[field];
+	},
+	errorClass : function(field) {
+		return (Session.get("editTopicErrors")[field] ? "has-error" : "");
+	}
+});
