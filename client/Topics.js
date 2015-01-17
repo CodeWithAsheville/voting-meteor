@@ -74,7 +74,9 @@ Template.createTopic.events({
 		// Get data from the form
 		var topic = {
 			description: $(e.target).find('[name=description]').val(),
-			title: $(e.target).find('[name=title]').val()
+			title: $(e.target).find('[name=title]').val(),
+			reference_url :  $(e.target).find('[name=reference_url]').val()
+
 		};
 
 		var errors = Topics.validateAttributes(topic);
@@ -132,7 +134,8 @@ Template.editTopic.events({
 		var currentTopicId = this._id;
 		var topicProperties = {
 			description 	: $(e.target).find("[name=description]").val(),
-			title			: $(e.target).find("[name=title]").val()
+			title			: $(e.target).find("[name=title]").val(),
+			reference_url	: $(e.target).find("[name=reference_url]").val()
 		};
 
 		var errors = Topics.validateAttributes(topicProperties);
