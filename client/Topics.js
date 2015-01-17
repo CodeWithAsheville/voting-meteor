@@ -73,25 +73,21 @@ Template.createTopic.events({
 
 		// Get data from the form
 		var topic = {
-			url: $(e.target).find('[name=url]').val(),
+			description: $(e.target).find('[name=description]').val(),
 			title: $(e.target).find('[name=title]').val()
 		};
 
-		var errors = validateTopic(topic);
-		if (errors.title || errors.url) {
+		var errors = Topics.validateAttributes(topic);
+		if (errors.title || errors.description) {
 			return Session.set("createTopicErrors", errors);
 		}
 
 		// Call a custom method on the server to insert.
+		// `result` is topic id
 		Meteor.call("createTopic", topic, function(error, result) {
 			// display error to user if there's a problem and abort
 			if (error) {
 				return throwError(error.reason);
-			}
-
-			// if a topic with the specified url already exists, let them know
-			if (result.topicExists) {
-				throwError("This link has already been topiced.");
 			}
 			Router.go("topicPage", {_id:result._id});
 		});
@@ -135,24 +131,22 @@ Template.editTopic.events({
 
 		var currentTopicId = this._id;
 		var topicProperties = {
-			url 	: $(e.target).find("[name=url]").val(),
-			title	: $(e.target).find("[name=title]").val()
+			description 	: $(e.target).find("[name=description]").val(),
+			title			: $(e.target).find("[name=title]").val()
 		};
 
-		var errors = validateTopic(topicProperties);
-		if (errors.title || errors.url) {
+		var errors = Topics.validateAttributes(topicProperties);
+		if (errors.title || errors.description) {
 			return Session.set("editTopicErrors", errors);
 		}
 
-		// Tell the server to update the record
-		Topics.update(currentTopicId, {$set:topicProperties}, function(error) {
-			// display error
+		// Call a custom method on the server to insert.
+		Meteor.call("editTopic", currentTopicId, topicProperties, function(error, result) {
+			// display error to user if there's a problem and abort
 			if (error) {
-				throwError(error.reason);
+				return throwError(error.reason);
 			}
-			else {
-				Router.go("topicPage", {_id:currentTopicId});
-			}
+			Router.go("topicPage", {_id:result._id});
 		});
 	},
 

@@ -18,14 +18,7 @@
 
 <!-- single topic in a list view -->
 <template name="topicItem">
-	<div class="topic">
-		{{#if isLoggedIn}}
-		  {{#if hasAlreadyVoted}}
-			<a href="#" class="voteBtn alreadyVoted btn disabled">✔</a>
-		  {{else}}
-			<a href="#" class="voteBtn upvote btn btn-default">⬆</a>
-		  {{/if}}
-		{{/if}}
+	<div class="topic col-md-3">
 		<div class="topic-content">
 			<h3><a href="{{pathFor 'topicPage'}}">{{title}}</a></h3>
 			<div class='details'>
@@ -33,10 +26,26 @@
 				submitted by {{author}},
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
 			</div>
-		</div>
+		</div>		
 		{{#if isLoggedIn}}
-			<a href="{{pathFor 'topicPage'}}" class="discuss btn btn-default">Discuss</a>
-			{{#if isOwnTopic}}<a href="{{pathFor 'editTopic'}}" class="edit btn btn-default">Edit</a>{{/if}}
+			<div class="actions">
+				{{#if hasAlreadyVoted}}
+					<a href="#" class="voteBtn alreadyVoted btn disabled">
+						✔
+					</a>
+				{{else}}
+					<a href="#" class="voteBtn upvote btn btn-default">
+						Vote Up ⬆
+					</a>
+				{{/if}}		
+				<a href="{{pathFor 'topicPage'}}" class="discuss btn btn-default">	Discuss
+				</a>
+				{{#if isOwnTopic}}
+					<a href="{{pathFor 'editTopic'}}" class="edit btn btn-default">
+						Edit
+					</a>
+				{{/if}}				
+			</div>
 		{{/if}}
 	</div>
 </template>

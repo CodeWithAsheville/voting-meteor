@@ -22,7 +22,7 @@ body {
 }
 
 
-//////////////////////////////////
+////////////////////////////////// 
 //
 //	Single topic display
 //
@@ -50,10 +50,10 @@ body {
 	}
 
 	.voteBtn {
-		display: block;
+		/*display: block;*/
 		margin: 7px 12px 0 0;
 		float: left;
-		width:3em;
+		/*width:3em;*/
 
 		&.alreadyVoted {
 			font-size:3em;
@@ -63,10 +63,14 @@ body {
 
 	.edit,
 	.discuss {
-		display: block;
-		float: right;
+		/*display: block;*/
+		/*float: right;*/
 		margin-top: 7px;
 		margin-left:10px;
+	}
+	.actions {
+		clear: both;
+		display:block;
 	}
 
 }
@@ -78,6 +82,7 @@ body {
 //
 //////////////////////////////////
 ul.comments {
+	clear:both;
 	list-style-type: none;
 	margin:0;
 
