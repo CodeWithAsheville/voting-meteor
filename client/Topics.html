@@ -71,7 +71,7 @@
 
 <!-- page showing a single topic -->
 <template name="topicPage">
-	{{> topicItem}}
+	{{> singleTopic}}
 	<div class="comments-container">
 		<h4>
 			Comments
@@ -85,6 +85,55 @@
 		{{> embedCommentForm}}
 	</div>
 </template>
+
+
+<!-- single topic in a list view -->
+<template name="singleTopic">
+	<div class="topic singleTopic">
+		<div class="topic-content">
+			<h3><a href="{{pathFor 'topicPage'}}">{{title}}</a></h3>
+			<p>"{{trimString description}}"</p>
+				<div class="reference-url">
+					{{ #if reference_url }}
+						Reference:
+						<a href="{{ reference_url }}">{{ reference_url }}</a>
+					{{/if}}
+				</div>
+			<div class='details'>
+				{{pluralize voteCount "vote" "votes"}},
+				submitted by {{author}},
+				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
+			</div>
+		</div>
+		{{#if isLoggedIn}}
+			<div class="actions btn-group">
+				{{#if hasAlreadyVoted}}
+					<a href="#" class="voteBtn alreadyVoted btn btn-default disabled">
+						<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+					</a>
+				{{else}}
+					<a href="#" class="voteBtn upvote btn btn-default">
+						Vote Up
+						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+					</a>
+				{{/if}}
+				{{#if isOwnTopicOrAdmin}}
+					<a href="{{pathFor 'editTopic'}}" class="edit btn btn-default">
+						Edit
+						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+					</a>
+				{{/if}}
+				{{#if isAdmin}}
+					<a href="{{pathFor 'mergeTopic'}}" class="merge btn btn-default">
+						Merge
+						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+					</a>
+				{{/if}}
+			</div>
+		{{/if}}
+	</div>
+</template>
+
 
 
 <!-- create a new topic -->
