@@ -10,7 +10,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="{{pathFor 'home'}}">OpenAVL</a>
+					<a class="navbar-brand" href="{{pathFor 'topics'}}">OpenAVL</a>
 				</div>
 				<div class="collapse navbar-collapse" id="navigation">
 					<ul class="nav navbar-nav">
@@ -19,25 +19,25 @@
 								Sort
 								<b class="caret"></b>
 							</a>
-<!--
+
 							<ul class="dropdown-menu">
 								<li>
-									<a href="{{pathFor 'newPosts'}}">Newest</a>
+									<a href="{{pathFor 'topics'}}">Newest</a>
 								</li>
 								<li>
-									<a href="{{pathFor 'topPosts'}}">Top Voted</a>
+									<a href="{{pathFor 'topTopics'}}">Top Voted</a>
 								</li>
 							</ul>
--->
+
 						</li>
-<!--
+
 						{{#if currentUser}}
 							<li class="dropdown">
 								{{> notifications}}
 							</li>
-							<li><a href="{{pathFor 'createPost'}}">Create Post</a></li>
+							<li><a href="{{pathFor 'createTopic'}}">Create Topic</a></li>
 						{{/if}}
--->					</ul>
+					</ul>
 
 					<ul class="nav navbar-nav navbar-right">
 						{{> loginButtons}}
@@ -65,7 +65,7 @@
 <template name="notFound">
 	<div class="not-found jumbotron">
 		<h2>404</h2>
-		<p>Sorry, we couldn't find a page at this address.</p>
+		<p>Sorry, we couldn't find that page.</p>
 	</div>
 </template>
 
@@ -79,7 +79,7 @@
 
 
 
-<!-- Error template(s)
+<!-- Error templates -->
 <template name="errors">
 	<div class="errors">
 		{{#each errors}}
@@ -94,4 +94,3 @@
 		{{message}}
 	</div>
 </template>
--->
