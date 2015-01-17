@@ -30,7 +30,7 @@
 					{{/if}}
 				</div>
 			<div class='details'>
-				{{pluralize voteCount "vote" "votes"}},
+				{{pluralize voteCount "vote" "votes"}} |
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
 			</div>
 		</div>
@@ -92,6 +92,7 @@
 	<div class="topic singleTopic">
 		<div class="topic-content">
 			<h3><a href="{{pathFor 'topicPage'}}">{{title}}</a></h3>
+			<span class="byline">submitted by {{author}}</span>
 			<p>"{{trimString description}}"</p>
 				<div class="reference-url">
 					{{ #if reference_url }}
@@ -100,8 +101,7 @@
 					{{/if}}
 				</div>
 			<div class='details'>
-				{{pluralize voteCount "vote" "votes"}},
-				submitted by {{author}},
+				{{pluralize voteCount "vote" "votes"}} |
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
 			</div>
 		</div>
@@ -123,13 +123,15 @@
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
 				{{/if}}
+			</div>
+			<div class="admin-actions">
 				{{#if isAdmin}}
-					<a href="{{pathFor 'mergeTopic'}}" class="merge btn btn-default">
+					<a href="{{pathFor 'mergeTopic'}}" class="merge btn btn-success">
 						Merge
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
 				{{/if}}
-			</div>
+			</div>	
 		{{/if}}
 	</div>
 </template>
