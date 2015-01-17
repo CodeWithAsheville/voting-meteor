@@ -28,13 +28,24 @@
 			</div>
 		</div>		
 		{{#if isLoggedIn}}
-			{{#if hasAlreadyVoted}}
-				<a href="#" class="voteBtn alreadyVoted btn disabled">✔</a>
-			{{else}}
-				<a href="#" class="voteBtn upvote btn btn-default">Vote Up ⬆</a>
-			{{/if}}		
-			<a href="{{pathFor 'topicPage'}}" class="discuss btn btn-default">Discuss</a>
-			{{#if isOwnTopic}}<a href="{{pathFor 'editTopic'}}" class="edit btn btn-default">Edit</a>{{/if}}
+			<div class="actions">
+				{{#if hasAlreadyVoted}}
+					<a href="#" class="voteBtn alreadyVoted btn disabled">
+						✔
+					</a>
+				{{else}}
+					<a href="#" class="voteBtn upvote btn btn-default">
+						Vote Up ⬆
+					</a>
+				{{/if}}		
+				<a href="{{pathFor 'topicPage'}}" class="discuss btn btn-default">	Discuss
+				</a>
+				{{#if isOwnTopic}}
+					<a href="{{pathFor 'editTopic'}}" class="edit btn btn-default">
+						Edit
+					</a>
+				{{/if}}				
+			</div>
 		{{/if}}
 	</div>
 </template>
