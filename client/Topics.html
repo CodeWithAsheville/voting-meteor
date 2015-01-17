@@ -18,10 +18,10 @@
 
 <!-- single topic in a list view -->
 <template name="topicItem">
-	<div class="topic col-md-3">
+	<div class="topic col-md-4 col-sm-6 col-xs-12">
 		<div class="topic-content">
 			<h3><a href="{{pathFor 'topicPage'}}">{{title}}</a></h3>
-			<p>{{trimString description 100}}</p>
+			<p>"{{trimString description 100}}"</p>
 			<div class='details'>
 				{{pluralize voteCount "vote" "votes"}},
 				submitted by {{author}},
@@ -29,21 +29,24 @@
 			</div>
 		</div>		
 		{{#if isLoggedIn}}
-			<div class="actions">
+			<div class="actions btn-group">
 				{{#if hasAlreadyVoted}}
 					<a href="#" class="voteBtn alreadyVoted btn disabled">
-						✔
+						<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
 					</a>
 				{{else}}
 					<a href="#" class="voteBtn upvote btn btn-default">
-						Vote Up ⬆
+						Vote Up 
+						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
 					</a>
 				{{/if}}		
-				<a href="{{pathFor 'topicPage'}}" class="discuss btn btn-default">	Discuss
+				<a href="{{pathFor 'topicPage'}}" class="discuss btn btn-default">	  Discuss 
+					<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
 				</a>
 				{{#if isOwnTopic}}
 					<a href="{{pathFor 'editTopic'}}" class="edit btn btn-default">
-						Edit
+						Edit 
+						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
 				{{/if}}				
 			</div>
@@ -55,12 +58,18 @@
 <!-- page showing a single topic -->
 <template name="topicPage">
 	{{> topicItem}}
-	<ul class="comments">
-		{{#each comments}}
-			{{> commentItem}}
-		{{/each}}
-	</ul>
-	{{> embedCommentForm}}
+	<div class="comments-container">
+		<h4>
+			Comments 
+			<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+		</h4>
+		<ul class="comments">
+			{{#each comments}}
+				{{> commentItem}}
+			{{/each}}
+		</ul>
+		{{> embedCommentForm}}
+	</div>
 </template>
 
 
