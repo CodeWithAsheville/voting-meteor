@@ -23,6 +23,12 @@ UI.registerHelper("dateTime", function(date) {
 	return date.toLocaleDateString() + " at " + date.toLocaleTimeString();
 });
 
+UI.registerHelper("trimString", function(string, length){
+	if (string.length > length){
+		return string.substring(0, length) + "...";
+	}
+	return string;
+});
 
 
 //////////////////////////////

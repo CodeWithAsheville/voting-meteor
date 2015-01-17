@@ -21,6 +21,7 @@
 	<div class="topic col-md-3">
 		<div class="topic-content">
 			<h3><a href="{{pathFor 'topicPage'}}">{{title}}</a></h3>
+			<p>{{trimString description 100}}</p>
 			<div class='details'>
 				{{pluralize voteCount "vote" "votes"}},
 				submitted by {{author}},
@@ -71,12 +72,12 @@
 			<div class="controls">
 				<input name="title" id="title" type="text" value="" placeholder="Name your topic" class="form-control"/>
 				<span class='help-block'>{{errorMessage 'title'}}</span>
-			</div>
+			</div> 
 		</div>
 		<div class="form-group {{errorClass 'description'}}">
 			<label class="control-label" for="description">Description</label>
 			<div class="controls">
-				<input name="description" id="description" type="text" value="" placeholder="Description of your topic" class="form-control"/>
+				<textarea name="description" id="description" value="" placeholder="Description of your topic" class="form-control"></textarea>
 				<span class='help-block'>{{errorMessage 'description'}}</span>
 			</div>
 		</div>
