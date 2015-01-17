@@ -39,7 +39,15 @@ if (Topics.find().count() === 0) {
 
 	Topics.createTopic(owen, {
 		title		: "Campaign spending",
-		description	: "Full account of spending of each candidate for a public office.",
+		description	: "Full account of spending of each candidate for a public office. \
+Long long long description. \
+Long long long description. \
+Long long long description. \
+Long long long description. \
+Long long long description. \
+Long long long description. \
+Long long long description. \
+END of description.",
 		tags		: "elections finances"
 	});
 
