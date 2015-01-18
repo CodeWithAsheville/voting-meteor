@@ -32,6 +32,7 @@
 			<div class='details'>
 				{{pluralize voteCount "vote" "votes"}},
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
+				{{tags}}
 			</div>
 		</div>
 		{{#if isLoggedIn}}
@@ -58,7 +59,7 @@
 			</div>
 			<div class="admin-actions">
 				{{#if isAdmin}}
-					<a href="{{pathFor 'mergeTopic'}}" class="merge btn btn-success">
+					<a href="{{pathFor 'mergeTopics'}}" class="merge btn btn-success">
 						Merge
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
@@ -91,7 +92,7 @@
 <template name="singleTopic">
 	<div class="topic singleTopic">
 		<div class="topic-content">
-			<h3><a href="{{pathFor 'topicPage'}}">{{title}}</a></h3>
+			<h3>{{title}}</h3>
 			<p>"{{trimString description}}"</p>
 				<div class="reference-url">
 					{{ #if reference_url }}
@@ -107,6 +108,7 @@
 		</div>
 		{{#if isLoggedIn}}
 			<div class="actions btn-group">
+				<!-- upvote/downvote -->
 				{{#if hasAlreadyVoted}}
 					<a href="#" class="voteBtn alreadyVoted btn btn-default disabled">
 						<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
@@ -117,14 +119,37 @@
 						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
 					</a>
 				{{/if}}
+
+				<!-- subscribe/unsubscribe -->
+				{{#if hasAlreadySubscribed}}
+					<a href="#" class="subscribeBtn unsubscribe btn btn-default">
+						Stop watching topic
+					</a>
+				{{else}}
+					<a href="#" class="subscribeBtn subscribe btn btn-default">
+						Watch this topic
+					</a>
+				{{/if}}
+
+				<!-- edit -->
 				{{#if isOwnTopicOrAdmin}}
 					<a href="{{pathFor 'editTopic'}}" class="edit btn btn-default">
 						Edit
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
 				{{/if}}
+
+				<!-- delete -->
+				{{#if isOwnTopicOrAdmin}}
+					<a  href="#" class="remove btn btn-default">
+						Delete
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</a>
+				{{/if}}
+
+				<!-- merge -->
 				{{#if isAdmin}}
-					<a href="{{pathFor 'mergeTopic'}}" class="merge btn btn-default">
+					<a href="{{pathFor 'mergeTopics'}}" class="merge btn btn-default">
 						Merge
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
@@ -184,23 +209,23 @@
 		</div>
 		<input type="submit" value="Save" class="btn btn-primary submit"/>
 		<input type="submit" value="Cancel" class="btn cancel"/>
-		<a class="btn btn-link delete" href="#">Delete topic</a>
+		<a class="btn btn-link remove" href="#">Delete topic</a>
 	</form>
 </template>
 
 
 <!-- merge existing topic -->
-<template name="mergeTopic">
+<template name="mergeTopics">
 	<form class="main form">
 		<div class="form-group {{errorClass 'title'}}">
-			<label class="control-label" for="title">Parent Topic</label>
-			{{title}}
+			<label class="control-label" for="title">Topic to keep:</label>
+			<input class="form-control" type="text" disabled value='{{title}}' />
 		</div>
 		<div class="form-group {{errorClass 'description'}}">
-			<label class="control-label" for="description">Child Topic ID</label>
+			<label class="control-label" for="description">Topic to merge with the above</label>
 			<div class="controls">
-				<input name="child_topic_id" id="child_topic_id" type="text" value="{{child_topic_id}}" placeholder="ID of the child topic" class="form-control"/>
-				<span class='help-block'>{{errorMessage 'child_topic_id'}}</span>
+				<input name="childTopicId" id="childTopicId" type="text" placeholder="ID of the child topic" class="form-control"/>
+				<span class='help-block'>{{errorMessage 'childTopicId'}}</span>
 			</div>
 		</div>
 		<input type="submit" value="Save" class="btn btn-primary submit"/>

@@ -37,13 +37,27 @@ var itemHelpers = {
 		var votes = (user && user.topics ? user.topics.votes : null);
 		if (!votes || votes.length === 0) return false;
 
-		// check if that contains the topic id
+		// check if list contains the topic id
 		return votes.indexOf(this._id) > -1;
 	},
+
+	// Have we already subscribed to the topic?
+	hasAlreadySubscribed : function() {
+		// `this` is the topic
+
+		// get the ids of topics this user has voted for
+		var user = Meteor.user();
+		var subscriptions = (user && user.topics ? user.topics.subscriptions : null);
+		if (!subscriptions || subscriptions.length === 0) return false;
+
+		// check if list contains the topic id
+		return subscriptions.indexOf(this._id) > -1;
+	}
 };
 Template.topicItem.helpers(itemHelpers);
 Template.singleTopic.helpers(itemHelpers);
 
+// In the below, `this` is the existing topic.
 var itemEvents = {
 	"click .upvote" : function(e) {
 		e.preventDefault();
@@ -52,6 +66,27 @@ var itemEvents = {
 				throwError(error.reason);
 			}
 		});
+	},
+
+	"click .remove" : function(e) {
+		e.preventDefault();
+		if (!confirm("Delete this topic?")) return;
+
+		Meteor.call("removeTopic", this._id, function(error, result) {
+			if (error) return throwError(error.reason);
+			// go to the list of topics
+			Router.go("topics");
+		});
+	},
+
+	"click .subscribe" : function(e) {
+		e.preventDefault();
+		Meteor.call("subscribeToTopic", this._id);
+	},
+
+	"click .unsubscribe" : function(e) {
+		e.preventDefault();
+		Meteor.call("unsubscribeFromTopic", this._id);
 	}
 }
 Template.topicItem.events(itemEvents);
@@ -171,14 +206,16 @@ Template.editTopic.events({
 	},
 
 	// Delete button.
-	"click .delete":function(e) {
+	"click .remove":function(e) {
 		// `this` is the existing topic
 		e.preventDefault();
-		if (confirm("Delete this topic?")) {
-			var currentTopicId = this._id;
-			Topics.remove(currentTopicId);
+		if (!confirm("Delete this topic?")) return;
+
+		Meteor.call("removeTopic", this._id, function(error, result) {
+			if (error) return throwError(error.reason);
+			// return to the list of topic
 			Router.go("topics");
-		}
+		});
 	}
 });
 
@@ -200,38 +237,31 @@ Template.editTopic.helpers({
 
 //////////////////////////////
 //
-//	mergeTopic template
+//	mergeTopics template
 //
 //////////////////////////////
-Template.mergeTopic.events({
+Template.mergeTopics.events({
 	// Save button.
 	'submit form': function(e) {
 		// NOTE: `this` is the existing topic
 		e.preventDefault();
 
-		var currentTopicId = this._id;
-		var topicProperties = {
-			childTopicID	: $(e.target).find("[name=child_topic_id]").val()
-		};
+		var parentTopicId = this._id;
+		var childTopicId = $(e.target).find("[name=childTopicId]").val().trim();
 
-		console.log(currentTopicId);
-		console.log(topicProperties.childTopicID);
+		// if field is empty, go back to topic's page
+		if (!childTopicId) {
+			return throwError("Please enter a topic id.");
+		}
 
-
-
-		// var errors = Topics.validateAttributes(topicProperties);
-		// if (errors.title || errors.description) {
-		// 	return Session.set("editTopicErrors", errors);
-		// }
-
-		// // Call a custom method on the server to insert.
-		// Meteor.call("editTopic", currentTopicId, topicProperties, function(error, result) {
-		// 	// display error to user if there's a problem and abort
-		// 	if (error) {
-		// 		return throwError(error.reason);
-		// 	}
-		// 	Router.go("topicPage", {_id:result._id});
-		// });
+		Meteor.call("mergeTopics", parentTopicId, childTopicId, function(error, result) {
+			// display error to user if there's a problem and abort
+			if (error) {
+				return throwError(error.reason);
+			}
+			// go to parent topic
+			Router.go("topicPage", {_id:parentTopicId});
+		});
 	},
 
 	// Cancel button.
@@ -244,12 +274,12 @@ Template.mergeTopic.events({
 });
 
 // Clear errors when we create the creatTopic form.
-Template.mergeTopic.created = function() {
+Template.mergeTopics.created = function() {
 	Session.set("editTopicErrors", {});
 }
 
 // Show errors as necessary in the editTopic form.
-Template.mergeTopic.helpers({
+Template.mergeTopics.helpers({
 	errorMessage: function(field) {
 		return Session.get("editTopicErrors")[field];
 	},
