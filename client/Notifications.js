@@ -32,8 +32,9 @@ Template.notificationItem.helpers({
 });
 
 Template.notificationItem.events({
+	// When they select a notification, mark it as read.
 	"click a" : function() {
-		Notifications.update(this._id, {$set: {read:true}});
+		Meteor.call("markNotificationAsRead", this._id);
 	}
 
 });
