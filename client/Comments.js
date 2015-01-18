@@ -6,9 +6,24 @@
 Template.commentItem.helpers({
 	createdAsText : function(){
 		return this.created.toLocaleDateString() + " at " + this.created.toLocaleTimeString();
+	},
+
+	// Does the logged in user own this topic?
+	isOwnCommentOrAdmin: function() {
+		return this.authorId === Meteor.userId() || User.isAdmin(Meteor.user() );
 	}
 });
 
+Template.commentItem.events({
+	"click .remove" : function(e, template) {
+		e.preventDefault();
+		var commentId = this._id;
+		Meteor.call("removeTopicComment", commentId, function(error, result) {
+			if (error) throwError(error.reason);
+		});
+	}
+
+});
 
 //////////////////////////////
 //

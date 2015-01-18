@@ -4,6 +4,12 @@
 			<span class="author">{{author}}</span>
 			<span class="date">{{dateTime created}}</span>
 		</h4>
+		{{#if isOwnCommentOrAdmin}}
+			<a href="#" class="remove btn btn-default">
+				Remove
+				<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+			</a>
+		{{/if}}
 		<p class='body'>{{comment}}</p>
 	</li>
 </template>
