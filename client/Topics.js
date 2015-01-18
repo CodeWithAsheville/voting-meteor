@@ -54,11 +54,10 @@ var itemHelpers = {
 		return subscriptions.indexOf(this._id) > -1;
 	},
 
-	tagsList : function(short) {
+	tagsList : function(charLimit, showNone) {
 		var tags = (this.tags || []).join(", ");
-		if (!tags) return "";
-		tags = "| "+tags;
-		if (short && tags.length > 25) tags = tags.substr(0, 25) + "...";
+		if (!tags) return (showNone ? "(none)" : "");
+		if (charLimit && tags.length > charLimit) tags = tags.substr(0, (charLimit-3)) + "...";
 		return tags;
 	}
 };

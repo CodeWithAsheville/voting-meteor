@@ -32,7 +32,7 @@
 			<div class='details'>
 				{{pluralize voteCount "vote" "votes"}} |
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
-				{{tagsList "SHORT"}}
+				{{tagsList 20}}
 			</div>
 		</div>
 		{{#if isLoggedIn}}
@@ -112,7 +112,9 @@
 				<div class='details'>
 					{{pluralize voteCount "vote" "votes"}} |
 					<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
-					{{tagsList}}
+					<div class='tags'>
+						<label>Tags:</label> {{tagsList 0 "SHOW_NONE"}}
+					</div>
 				</div>
 			{{/if}}
 		</div>
