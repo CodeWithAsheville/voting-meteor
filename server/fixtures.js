@@ -38,8 +38,19 @@ if (Topics.find().count() === 0) {
 		}
 	}
 
+	console.info("Creating accounts");
 
-	console.info("Creating sample records");
+	var adminId = Accounts.createUser({
+        username	: 'admin',
+        email		: 'admin@cfa.org',
+        password	: 'admin',
+        roles		: ['admin']
+    });
+	smokeTest("Admin user was created", TRUTHY, function(){return User.getUserOrDie(adminId)});
+
+	// make the admin user an actual admin
+	User.makeAdmin(adminId);
+	smokeTest("Admin was made an admin", true, function(){return User.isAdmin(adminId)});
 
 	var owenId = Accounts.createUser({
         username	: 'owen',
@@ -48,17 +59,25 @@ if (Topics.find().count() === 0) {
     });
 	var owen = Meteor.users.findOne(owenId);
 
-	var adminId = Accounts.createUser({
-        username	: 'admin',
-        email		: 'admin@cfa.org',
-        password	: 'admin',
-        roles		: ['admin']
+	var bobId = Accounts.createUser({
+        username	: 'bob',
+        email		: 'bob@w.com',
+        password	: 'olamola',
     });
+	var bob = Meteor.users.findOne(bobId);
 
-	// make the admin user an actual admin
-	User.makeAdmin(adminId);
-	smokeTest("Admin was made an admin", true, function(){return User.isAdmin(adminId)});
 
+
+	console.info("Creating sample records");
+
+
+	var bobTopics = [];
+	for (var i = 1; i <= 5; i++) {
+		bobTopics[i] = Topics.createTopic(bob, {
+			title	 	: "Test topic "+i,
+			description	: "Testing"
+		});
+	}
 
 	var landlordId = Topics.createTopic(owen, {
 		title			: "Landlord complaints",
@@ -88,22 +107,6 @@ END of description.",
 		tags		: "Elections,Budget"
 	});
 
-
-	var bobId = Accounts.createUser({
-        username	: 'bob',
-        email		: 'bob@w.com',
-        password	: 'olamola',
-    });
-	var bob = Meteor.users.findOne(bobId);
-
-	var bobTopics = [];
-	for (var i = 1; i <= 5; i++) {
-		bobTopics[i] = Topics.createTopic(bob, {
-			title	 	: "Bob topic "+i,
-			description	: "Testing"
-		});
-	}
-
 	//////
 	// Make a couple of changes
 	//////
@@ -121,7 +124,7 @@ END of description.",
 		function() {
 			var newTags = "Housing,Zoning,Inspections,Test";
 			Topics.editTopic(landlordId, {tags:newTags}, owen);
-			var updatedTags = Topics.findOne(landlordId).tags.join(" ");
+			var updatedTags = Topics.findOne(landlordId).tags.join(",");
 			return updatedTags === newTags;
 		});
 
