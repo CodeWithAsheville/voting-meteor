@@ -47,7 +47,7 @@ body {
 	.byline{
 		font-style: italic;
 		font-size: .9em;
-		color: #626262;
+		color: #999;
 	}
 
 	p {
@@ -78,12 +78,14 @@ body {
 		clear: both;
 		display:block;
 		overflow:hidden;
+		vertical-align:top;
 	}
 	.admin-actions{
 		display:block;
 		margin-top: 5px;
+
 		a{
-			width: 100%;
+			width: 50%;
 		}
 	}
 	.topic-content{
@@ -98,6 +100,19 @@ body {
 	.reference-url{
 		min-height:1.5em;
 		font-size: .9em;
+	}
+
+	//////////////////////////////////
+	// single topic overrides
+	//////////////////////////////////
+	&.singleTopic {
+		.admin-actions {
+			float:right;
+			margin-top:0;
+			a {
+				width:auto;
+			}
+		}
 	}
 
 }

@@ -30,7 +30,7 @@
 					{{/if}}
 				</div>
 			<div class='details'>
-				{{pluralize voteCount "vote" "votes"}},
+				{{pluralize voteCount "vote" "votes"}} |
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
 				{{tags}}
 			</div>
@@ -57,8 +57,12 @@
 					</a>
 				{{/if}}
 			</div>
-			<div class="admin-actions">
+			<div class="admin-actions btn-group">
 				{{#if isAdmin}}
+					<a  href="#" class="remove btn btn-danger">
+						Delete
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</a>
 					<a href="{{pathFor 'mergeTopics'}}" class="merge btn btn-success">
 						Merge
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
@@ -93,6 +97,7 @@
 	<div class="topic singleTopic">
 		<div class="topic-content">
 			<h3>{{title}}</h3>
+			<span class="byline">submitted by {{author}}</span>
 			<p>"{{trimString description}}"</p>
 				<div class="reference-url">
 					{{ #if reference_url }}
@@ -101,8 +106,7 @@
 					{{/if}}
 				</div>
 			<div class='details'>
-				{{pluralize voteCount "vote" "votes"}},
-				submitted by {{author}},
+				{{pluralize voteCount "vote" "votes"}} |
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
 			</div>
 		</div>
@@ -138,7 +142,6 @@
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
 				{{/if}}
-
 				<!-- delete -->
 				{{#if isOwnTopicOrAdmin}}
 					<a  href="#" class="remove btn btn-default">
@@ -149,7 +152,7 @@
 
 				<!-- merge -->
 				{{#if isAdmin}}
-					<a href="{{pathFor 'mergeTopics'}}" class="merge btn btn-default">
+					<a href="{{pathFor 'mergeTopics'}}" class="merge btn btn-success">
 						Merge
 						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
 					</a>
