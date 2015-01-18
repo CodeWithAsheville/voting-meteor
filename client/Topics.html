@@ -24,15 +24,15 @@
 			<span class="byline">submitted by {{author}}</span>
 			<p>"{{trimString description 100}}"</p>
 				<div class="reference-url">
-					{{ #if reference_url }}
+					{{ #if referenceUrl }}
 						Reference:
-						<a href="{{ reference_url }}">{{ reference_url }}</a>
+						<a href="{{ referenceUrl }}">{{ referenceUrl }}</a>
 					{{/if}}
 				</div>
 			<div class='details'>
 				{{pluralize voteCount "vote" "votes"}} |
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
-				{{tags}}
+				{{tagsList "SHORT"}}
 			</div>
 		</div>
 		{{#if isLoggedIn}}
@@ -47,7 +47,8 @@
 						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
 					</a>
 				{{/if}}
-				<a href="{{pathFor 'topicPage'}}" class="discuss btn btn-default">	  Discuss
+				<a href="{{pathFor 'topicPage'}}" class="discuss btn btn-default">
+					Discuss
 					<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
 				</a>
 				{{#if isOwnTopicOrAdmin}}
@@ -98,89 +99,135 @@
 		<div class="topic-content">
 			<h3>{{title}}</h3>
 			<span class="byline">submitted by {{author}}</span>
-			<p>"{{trimString description}}"</p>
+			{{#if mergedInto}}
+				<p>This topic has been merged with <a href="{{pathFor route='topicPage' _id=mergedInto }}">another topic</a>.</p>
+			{{else}}
+				<p>"{{trimString description}}"</p>
 				<div class="reference-url">
-					{{ #if reference_url }}
+					{{ #if referenceUrl }}
 						Reference:
-						<a href="{{ reference_url }}">{{ reference_url }}</a>
+						<a href="{{ referenceUrl }}">{{ referenceUrl }}</a>
 					{{/if}}
 				</div>
-			<div class='details'>
-				{{pluralize voteCount "vote" "votes"}} |
-				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
-			</div>
+				<div class='details'>
+					{{pluralize voteCount "vote" "votes"}} |
+					<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
+					{{tagsList}}
+				</div>
+			{{/if}}
 		</div>
 		{{#if isLoggedIn}}
 			<div class="actions btn-group">
-				<!-- upvote/downvote -->
-				{{#if hasAlreadyVoted}}
-					<a href="#" class="voteBtn alreadyVoted btn btn-default disabled">
-						<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
-					</a>
-				{{else}}
-					<a href="#" class="voteBtn upvote btn btn-default">
-						Vote Up
-						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
-					</a>
-				{{/if}}
+				{{#unless mergedInto}}
+					<!-- upvote/downvote -->
+					{{#if hasAlreadyVoted}}
+						<a href="#" class="voteBtn alreadyVoted btn btn-default disabled">
+							<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+						</a>
+					{{else}}
+						<a href="#" class="voteBtn upvote btn btn-default">
+							Vote Up
+							<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+						</a>
+					{{/if}}
 
-				<!-- subscribe/unsubscribe -->
-				{{#if hasAlreadySubscribed}}
-					<a href="#" class="subscribeBtn unsubscribe btn btn-default">
-						Stop watching topic
-					</a>
-				{{else}}
-					<a href="#" class="subscribeBtn subscribe btn btn-default">
-						Watch this topic
-					</a>
-				{{/if}}
+					<!-- subscribe/unsubscribe -->
+					{{#if hasAlreadySubscribed}}
+						<a href="#" class="subscribeBtn unsubscribe btn btn-default">
+							Stop watching topic
+						</a>
+					{{else}}
+						<a href="#" class="subscribeBtn subscribe btn btn-default">
+							Watch this topic
+						</a>
+					{{/if}}
 
-				<!-- edit -->
-				{{#if isOwnTopicOrAdmin}}
-					<a href="{{pathFor 'editTopic'}}" class="edit btn btn-default">
-						Edit
-						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-					</a>
-				{{/if}}
-				<!-- delete -->
-				{{#if isOwnTopicOrAdmin}}
-					<a  href="#" class="remove btn btn-default">
-						Delete
-						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-					</a>
-				{{/if}}
+					<!-- edit -->
+					{{#if isOwnTopicOrAdmin}}
+						<a href="{{pathFor 'editTopic'}}" class="edit btn btn-default">
+							Edit
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+						</a>
+					{{/if}}
+					<!-- delete -->
+					{{#if isOwnTopicOrAdmin}}
+						<a  href="#" class="remove btn btn-default">
+							Delete
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</a>
+					{{/if}}
 
-				<!-- merge -->
-				{{#if isAdmin}}
-					<a href="{{pathFor 'mergeTopics'}}" class="merge btn btn-success">
-						Merge
-						<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-					</a>
-				{{/if}}
+					<!-- merge -->
+					{{#if isAdmin}}
+						<a href="{{pathFor 'mergeTopics'}}" class="merge btn btn-success">
+							Merge
+							<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+						</a>
+					{{/if}}
+				{{/unless}}
 			</div>
 		{{/if}}
 	</div>
 </template>
 
 
+<template name="topicFormControls">
+	<div class="form-group {{errorClass 'title'}}">
+		<label class="control-label" for="title">Title</label>
+		<div class="controls">
+			<input name="title" id="title" type="text" value="{{title}}" placeholder="Name your topic" class="form-control"/>
+			<span class='help-block'>{{errorMessage 'title'}}</span>
+		</div>
+	</div>
+	<div class="form-group {{errorClass 'description'}}">
+		<label class="control-label" for="description">Description</label>
+		<div class="controls">
+			<textarea name="description" id="description" type="text" placeholder="Description of your topic" class="form-control">{{description}}</textarea>
+			<span class='help-block'>{{errorMessage 'description'}}</span>
+		</div>
+	</div>
+	<div class="form-group {{errorClass 'referenceUrl'}}">
+		<label class="control-label" for="referenceUrl">Reference URL:</label>
+		<div class="controls">
+			<input name="referenceUrl" id="referenceUrl" type="text" value="{{referenceUrl}}" placeholder="Provide a reference URL (optional)" class="form-control"/>
+			<span class='help-block'>{{errorMessage 'referenceUrl'}}</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="control-label">Tags:</label>
+		<div class="controls">
+			<div class="row">
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Animals" checked="{{hasTag 'Animals'}}"/> Animals & Pets</label>
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Budget" checked="{{hasTag 'Budget'}}"/> City Budget</label>
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Civic Jobs" checked="{{hasTag 'Civic Jobs'}}"/> Civic Jobs</label>
+			</div>
+			<div class="row">
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Crime" checked="{{hasTag 'Crime'}}"/> Crime</label>
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Elections" checked="{{hasTag 'Elections'}}"/> Elections</label>
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Housing" checked="{{hasTag 'Housing'}}"/> Housing</label>
+			</div>
+			<div class="row">
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Inspections" checked="{{hasTag 'Inspections'}}"/> Inspections</label>
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Parking" checked="{{hasTag 'Parking'}}"/> Parking</label>
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Parks" checked="{{hasTag 'Parks'}}"/> Parks</label>
+			</div>
+			<div class="row">
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Public Transportation" checked="{{hasTag 'Public Transportation'}}"/> Public Transportation</label>
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Water" checked="{{hasTag 'Water'}}"/> Water</label>
+				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Zoning" checked="{{hasTag 'Zoning'}}"/> Zoning</label>
+			</div>
+			{{#if isAdmin}}
+				<input name="otherTags" id="tags" type="text" value="{{otherTags}}" placeholder="Other tags (comma separated)" class="form-control"/>
+			{{/if}}
+		</div>
+	</div>
+</template>
+
 
 <!-- create a new topic -->
 <template name="createTopic">
 	<form class="main form">
-		<div class="form-group {{errorClass 'title'}}">
-			<label class="control-label" for="title">Title</label>
-			<div class="controls">
-				<input name="title" id="title" type="text" value="" placeholder="Name your topic" class="form-control"/>
-				<span class='help-block'>{{errorMessage 'title'}}</span>
-			</div>
-		</div>
-		<div class="form-group {{errorClass 'description'}}">
-			<label class="control-label" for="description">Description</label>
-			<div class="controls">
-				<textarea name="description" id="description" value="" placeholder="Description of your topic" class="form-control"></textarea>
-				<span class='help-block'>{{errorMessage 'description'}}</span>
-			</div>
-		</div>
+		{{> topicFormControls }}
 		<input type="submit" value="Create" class="btn btn-primary"/>
 		<input type="submit" value="Cancel" class="btn cancel"/>
 	</form>
@@ -189,27 +236,7 @@
 <!-- edit existing topic -->
 <template name="editTopic">
 	<form class="main form">
-		<div class="form-group {{errorClass 'title'}}">
-			<label class="control-label" for="title">Title</label>
-			<div class="controls">
-				<input name="title" id="title" type="text" value="{{title}}" placeholder="Name your topic" class="form-control"/>
-				<span class='help-block'>{{errorMessage 'title'}}</span>
-			</div>
-		</div>
-		<div class="form-group {{errorClass 'description'}}">
-			<label class="control-label" for="description">Description</label>
-			<div class="controls">
-				<textarea name="description" id="description" type="text" placeholder="Description of your topic" class="form-control">{{description}}</textarea>
-				<span class='help-block'>{{errorMessage 'description'}}</span>
-			</div>
-		</div>
-		<div class="form-group {{errorClass 'title'}}">
-			<label class="control-label" for="title">Reference URL:</label>
-			<div class="controls">
-				<input name="reference_url" id="reference_url" type="text" value="{{reference_url}}" placeholder="Provide a reference URL (optional)" class="form-control"/>
-				<span class='help-block'>{{errorMessage 'reference_url'}}</span>
-			</div>
-		</div>
+		{{> topicFormControls }}
 		<input type="submit" value="Save" class="btn btn-primary submit"/>
 		<input type="submit" value="Cancel" class="btn cancel"/>
 		<a class="btn btn-link remove" href="#">Delete topic</a>

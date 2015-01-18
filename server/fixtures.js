@@ -63,15 +63,15 @@ if (Topics.find().count() === 0) {
 	var landlordId = Topics.createTopic(owen, {
 		title			: "Landlord complaints",
 		description		: "Complaints of renters against their landlords",
-		reference_url	: "http://www.codeforasheville.org",
-		tags			: "housing"
+		referenceUrl	: "http://www.codeforasheville.org",
+		tags			: "Housing,Zoning,Crime,Test"
 	});
 //	console.info("LANDLORD ID: ",landlordId);
 
 	Topics.createTopic(owen, {
 		title		: "City Budgets",
 		description	: "Full explanation of city budget.",
-		tags		: "finances"
+		tags		: "Budget"
 	});
 
 	Topics.createTopic(owen, {
@@ -85,7 +85,7 @@ Long long long description. \
 Long long long description. \
 Long long long description. \
 END of description.",
-		tags		: "elections finances"
+		tags		: "Elections,Budget"
 	});
 
 
@@ -119,7 +119,7 @@ END of description.",
 	// Have owen change tags of his own record.
 	smokeTest("Owen changed his own tags.", TRUTHY,
 		function() {
-			var newTags = "rentals landlords";
+			var newTags = "Housing,Zoning,Inspections,Test";
 			Topics.editTopic(landlordId, {tags:newTags}, owen);
 			var updatedTags = Topics.findOne(landlordId).tags.join(" ");
 			return updatedTags === newTags;

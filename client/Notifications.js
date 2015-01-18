@@ -6,14 +6,13 @@
 Template.notifications.helpers({
 	// List of unread notifications for this user.
 	notifications : function() {
-		return Notifications.find({userId: Meteor.userId(), read:false});
+		return Notifications.find({userId: Meteor.userId()});
 	},
 	// Number of unread notifications for this user.
 	notificationCount : function() {
-		return Notifications.find({userId: Meteor.userId(), read:false})
+		return Notifications.find({userId: Meteor.userId()})
 							.count();
 	}
-
 });
 
 

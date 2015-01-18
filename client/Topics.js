@@ -52,6 +52,14 @@ var itemHelpers = {
 
 		// check if list contains the topic id
 		return subscriptions.indexOf(this._id) > -1;
+	},
+
+	tagsList : function(short) {
+		var tags = (this.tags || []).join(", ");
+		if (!tags) return "";
+		tags = "| "+tags;
+		if (short && tags.length > 25) tags = tags.substr(0, 25) + "...";
+		return tags;
 	}
 };
 Template.topicItem.helpers(itemHelpers);
@@ -108,6 +116,73 @@ Template.topicPage.helpers({
 
 //////////////////////////////
 //
+//	topicFormControls template
+//
+//////////////////////////////
+
+// Tags for which we have checkboxen
+var knownTags = [
+	"Animals",
+	"Budget",
+	"Civic Jobs",
+	"Crime",
+	"Elections",
+	"Housing",
+	"Inspections",
+	"Parking",
+	"Parks",
+	"Public Transportation",
+	"Water",
+	"Zoning"
+];
+Template.topicFormControls.helpers({
+	hasTag : function(tagName) {
+		var tags = this.tags || [];
+		return (tags.indexOf(tagName) > -1);
+	},
+
+	otherTags : function() {
+		var args = [ (this.tags || []) ].concat(knownTags);
+		return _.without.apply(_, args).join(", ");
+	}
+});
+
+// Clear errors when we create the form.
+Template.topicFormControls.created = function() {
+	Session.set("topicForm", {});
+}
+
+// Show errors as necessary in the form.
+Template.topicFormControls.helpers({
+	errorMessage: function(field) {
+		return Session.get("topicForm")[field];
+	},
+	errorClass : function(field) {
+		return (Session.get("topicForm")[field] ? "has-error" : "");
+	}
+});
+
+// Return values
+Template.topicFormControls.getTopicFormValues = function($form) {
+	var properties = {
+		description 	: $form.find("[name=description]").val(),
+		title			: $form.find("[name=title]").val(),
+		referenceUrl	: $form.find("[name=referenceUrl]").val()
+	};
+
+	// Get tags from checkboxen and otherTags field
+	var tags = TopicTags.splitTags($form.find("[name=otherTags]").val());
+	$form.find("input.tag[type=checkbox]").each(function(index, checkbox) {
+		if (checkbox.checked) tags.push(checkbox.getAttribute("value"));
+	});
+	properties.tags = tags.sort();
+
+	return properties;
+}
+
+
+//////////////////////////////
+//
 //	createTopic template
 //
 //////////////////////////////
@@ -116,21 +191,16 @@ Template.createTopic.events({
 		e.preventDefault();
 
 		// Get data from the form
-		var topic = {
-			description: $(e.target).find('[name=description]').val(),
-			title: $(e.target).find('[name=title]').val(),
-			reference_url :  $(e.target).find('[name=reference_url]').val()
+		var properties = Template.topicFormControls.getTopicFormValues($(e.target));
 
-		};
-
-		var errors = Topics.validateAttributes(topic);
+		var errors = Topics.validateAttributes(properties);
 		if (errors.title || errors.description) {
-			return Session.set("createTopicErrors", errors);
+			return Session.set("topicForm", errors);
 		}
 
 		// Call a custom method on the server to insert.
 		// `result` is topic id
-		Meteor.call("createTopic", topic, function(error, result) {
+		Meteor.call("createTopic", properties, function(error, result) {
 			// display error to user if there's a problem and abort
 			if (error) {
 				return throwError(error.reason);
@@ -143,23 +213,7 @@ Template.createTopic.events({
 	"click .cancel":function(e) {
 		// `this` is the existing topic
 		e.preventDefault();
-		var currentTopicId = this._id;
 		Router.go("topics");
-	}
-});
-
-// Clear errors when we create the creatTopic form.
-Template.createTopic.created = function() {
-	Session.set("createTopicErrors", {});
-}
-
-// Show errors as necessary in the createTopic form.
-Template.createTopic.helpers({
-	errorMessage: function(field) {
-		return Session.get("createTopicErrors")[field];
-	},
-	errorClass : function(field) {
-		return (Session.get("createTopicErrors")[field] ? "has-error" : "");
 	}
 });
 
@@ -176,19 +230,15 @@ Template.editTopic.events({
 		e.preventDefault();
 
 		var currentTopicId = this._id;
-		var topicProperties = {
-			description 	: $(e.target).find("[name=description]").val(),
-			title			: $(e.target).find("[name=title]").val(),
-			reference_url	: $(e.target).find("[name=reference_url]").val()
-		};
+		var properties = Template.topicFormControls.getTopicFormValues($(e.target));
 
-		var errors = Topics.validateAttributes(topicProperties);
+		var errors = Topics.validateAttributes(properties);
 		if (errors.title || errors.description) {
 			return Session.set("editTopicErrors", errors);
 		}
 
 		// Call a custom method on the server to insert.
-		Meteor.call("editTopic", currentTopicId, topicProperties, function(error, result) {
+		Meteor.call("editTopic", currentTopicId, properties, function(error, result) {
 			// display error to user if there's a problem and abort
 			if (error) {
 				return throwError(error.reason);
@@ -216,21 +266,6 @@ Template.editTopic.events({
 			// return to the list of topic
 			Router.go("topics");
 		});
-	}
-});
-
-// Clear errors when we create the creatTopic form.
-Template.editTopic.created = function() {
-	Session.set("editTopicErrors", {});
-}
-
-// Show errors as necessary in the editTopic form.
-Template.editTopic.helpers({
-	errorMessage: function(field) {
-		return Session.get("editTopicErrors")[field];
-	},
-	errorClass : function(field) {
-		return (Session.get("editTopicErrors")[field] ? "has-error" : "");
 	}
 });
 
