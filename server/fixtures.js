@@ -5,6 +5,40 @@
 //////////////////////////////
 if (Topics.find().count() === 0) {
 
+
+	// Smoke test function.
+	// Pass a function to execute, an expected value and a message.
+	// We'll show a success or failure message.
+	// Pass `expected` as the `ERROR` constant if you're expecting an error.
+	var ERROR = "ERROR";
+	var TRUTHY = "TRUTHY";
+	var FALSY = "FALSY";
+	function smokeTest(message, expected, handler) {
+		if (expected === ERROR) {
+			try {
+				var result = handler();
+				console.warn("FAIL:  "+message+" (expected an error, got:",result,")");
+			} catch (e) {
+				console.info("PASS:  "+message);
+			}
+		} else {
+			try {
+				var result = handler();
+				if ( 	(expected === TRUTHY && !!result)
+					||  (expected === FALSY && !result)
+					||  (result === expected)
+				) {
+					console.info("PASS:  "+message);
+				} else {
+					console.warn("FAIL:  "+message+"  (expected ",expected,")");
+				}
+			} catch (e) {
+				console.info("FAIL:  "+message+" (error:",(e.reason||e),")");
+			}
+		}
+	}
+
+
 	console.info("Creating sample records");
 
 	var owenId = Accounts.createUser({
@@ -21,8 +55,10 @@ if (Topics.find().count() === 0) {
         roles		: ['admin']
     });
 
-	var admin = Meteor.users.findOne(adminId);
+	// make the admin user an actual admin
 	User.makeAdmin(adminId);
+	smokeTest("Admin was made an admin", true, function(){return User.isAdmin(adminId)});
+
 
 	var landlordId = Topics.createTopic(owen, {
 		title			: "Landlord complaints",
@@ -30,7 +66,7 @@ if (Topics.find().count() === 0) {
 		reference_url	: "http://www.codeforasheville.org",
 		tags			: "housing"
 	});
-	console.warn("LANDLORD ID: ",landlordId);
+//	console.info("LANDLORD ID: ",landlordId);
 
 	Topics.createTopic(owen, {
 		title		: "City Budgets",
@@ -75,35 +111,25 @@ END of description.",
 	console.info("Testing record editing");
 
 	// Have owen change title of his own record.
-	try {
-		Topics.editTopic(landlordId, {description:"Complaints of both landlords and renters"}, owen);
-		console.info("YAY!  Owen can change his own record!");
-	} catch (e) {
-		console.warn("BOO!  Error updating record:", e.reason || e);
-	}
+	smokeTest("Owen changed his own record.", TRUTHY,
+		function() {
+			return Topics.editTopic(landlordId, {description:"Complaints of both landlords and renters"}, owen);
+		});
 
 	// Have owen change tags of his own record.
-	try {
-		var newTags = "rentals landlords";
-		Topics.editTopic(landlordId, {tags:newTags}, owen);
-		var updatedTags = Topics.findOne(landlordId).tags.join(" ");
-		if (updatedTags === newTags) {
-			console.info("YAY!  Owen can change his tags!");
-		}
-		else {
-			console.warn("BOO!  Owen can't change his tags!");
-		}
-	} catch (e) {
-		console.warn("BOO!  Error updating tags:", e.reason || e);
-	}
+	smokeTest("Owen changed his own tags.", TRUTHY,
+		function() {
+			var newTags = "rentals landlords";
+			Topics.editTopic(landlordId, {tags:newTags}, owen);
+			var updatedTags = Topics.findOne(landlordId).tags.join(" ");
+			return updatedTags === newTags;
+		});
 
 	// Have bob try to change owen's record
-	try {
-		Topics.editTopic(landlordId, {title:"BAD BAD BAD"}, bob);
-		console.warn("BOO!  Bob is able to change owen's record!");
-	} catch (e) {
-		console.info("YAY!  Bob can't change owen's records:", e.reason || e);
-	}
+	smokeTest("Bob can't change Owen's record.", ERROR,
+		function() {
+			return Topics.editTopic(landlordId, {title:"BAD BAD BAD"}, bob);
+		});
 
 
 
@@ -112,7 +138,7 @@ END of description.",
 	// Create and then remove a topic
 	//////////
 
-	console.info("Testing record removal");
+	console.info("Testing record removal & tag count");
 
 	var tempTopic1 = Topics.createTopic(owen, {
 		title		: "DELETE ME 1",
@@ -127,44 +153,35 @@ END of description.",
 	});
 
 	// Make sure TEST_TAG is in the list of TopicTags exactly twice
-	var tag = TopicTags.findOne({tag:"TEST_TAG"});
-	if (!tag) {
-		console.warn("BOO!  TEST_TAG not found in TopicTags");
-	} else if (tag.count !== 2) {
-		console.warn("BOO!  TEST_TAG expected tag count of 2, got: "+tag.count);
-	} else {
-		console.info("YAY!  TEST_TAG count of 2 as expected!");
-	}
+	smokeTest("Found 2 instances of TEST_TAG", TRUTHY, function() {
+		var tag = TopicTags.findOne({tag:"TEST_TAG"});
+		if (!tag) return false;
+		return tag.count === 2;
+	});
 
 	// Remove first record
-	try {
-		Topics.removeTopic(tempTopic1);
-		console.info("YAY!  deleted temp topic 1");
-	} catch (e) {
-		console.warn("BOO!  Error removing temp topic 1: ",e);
-	}
-	// make sure tag count got decrememnted
-	var tag = TopicTags.findOne({tag:"TEST_TAG"});
-	if (!tag || tag.count !== 1) {
-		console.warn("BOO!  TEST_TAG expected tag count of 1, got: "+tag);
-	} else {
-		console.info("YAY!  TEST_TAG count is 1 as expected.");
-	}
+	smokeTest("Deleted first topic", TRUTHY, function() {
+		return Topics.removeTopic(tempTopic1);
+	});
+
+	// Make sure TEST_TAG is in the list of TopicTags exactly twice
+	smokeTest("Found 1 instances of TEST_TAG", TRUTHY, function() {
+		var tag = TopicTags.findOne({tag:"TEST_TAG"});
+		if (!tag) return false;
+		return tag.count === 1;
+	});
 
 	// Remove second record
-	try {
-		Topics.removeTopic(tempTopic2);
-		console.info("YAY!  deleted temp topic 2");
-	} catch (e) {
-		console.warn("BOO!  Error removing temp topic 2: ",e);
-	}
+	// Remove first record
+	smokeTest("Deleted second topic", TRUTHY, function() {
+		return Topics.removeTopic(tempTopic2);
+	});
+
 	// make sure tag got removed entirely
-	var tag = TopicTags.findOne({tag:"TEST_TAG"});
-	if (tag) {
-		console.warn("BOO!  TEST_TAG should have been deleted!  Got: ",tag);
-	} else {
-		console.info("YAY!  TEST_TAG got deleted!");
-	}
+	smokeTest("TEST_TAG was removed entirely", TRUTHY, function() {
+		var tag = TopicTags.findOne({tag:"TEST_TAG"});
+		return tag === undefined;
+	});
 
 	//////////
 	// Do some voting
@@ -173,63 +190,40 @@ END of description.",
 	console.info("Testing voting");
 
 	// try to vote for a bogus topic
-	try {
+	smokeTest("Upvoting bogus topic", ERROR, function() {
 		var success = Topics.upvoteTopic(bob, "BOGUS_TOPIC");
-		if (success) console.info("BOO!  Able to vote for a bogus topic!");
-		else		 console.warn("YAY!  Unable to vote for bogus topic.");
-	} catch (e) {
-		console.info("YAY!  Unable to vote for bogus topic.  ", e.reason || e);
-	}
+		if (success) throw new Meteor.Error("Vote succeeded.");
+	});
 
 	// have bob vote for owen's topic
-	try {
-		var success = Topics.upvoteTopic(bob, landlordId);
-		if (success) console.info("YAY!  Bob is able to vote for owen's topic.");
-		else		 console.warn("BOO!  Bob is not able to vote for owen's topic: ",success);
-	} catch (e) {
-		console.warn("BOO!  Bob is not able to vote for owen's topic: ", e.reason || e);
-	}
+	smokeTest("Vote for someone else's topic", TRUTHY, function() {
+		return Topics.upvoteTopic(bob, landlordId);
+	});
 
 	// have bob try to vote for owen's topic again, which should fail
-	try {
-		var success = Topics.upvoteTopic(bob, landlordId);
-		if (success) console.warn("BOO!  Bob is able to vote for owen's topic twice.")
-		else		 console.info("YAY!  Bob is not able to vote for owen's topic twice: ",success);
-	} catch (e) {
-		console.info("YAY!  Bob is unable to vote for owen's topic twice!");
-	}
+	smokeTest("Upvoting for same topic twice", FALSY, function() {
+		return Topics.upvoteTopic(bob, landlordId);
+	});
 
 	// have owen try to vote for his own topic -- which should fail.
-	try {
-		var success = Topics.upvoteTopic(owen, landlordId);
-		if (success) console.warn("BOO!  Owen is able to vote for his own topic twice.")
-		else		 console.info("YAY!  Owen is not able to vote for his own topic twice: ",success);
-	} catch (e) {
-		console.info("YAY!  Owen is unable to vote for his topic: ", e.reason || e);
-	}
+	smokeTest("Upvoting for own topic twice", FALSY, function() {
+		return Topics.upvoteTopic(owen, landlordId);
+	});
 
 	// have owen downvote his topic, then vote for it again
-	try {
-		var success = Topics.downvoteTopic(owen, landlordId);
-		if (success) console.info("YAY!  Owen is able to downvote his topic.")
-		else		 console.warn("BOO!  Owen is not able to downvote his topic: ",success);
-	} catch (e) {
-		console.info("BOO!  Owen is unable to downvote his topic: ", e.reason || e);
-	}
-	try {
-		var success = Topics.upvoteTopic(owen, landlordId);
-		if (success) console.info("YAY!  Owen is able to upvote his topic again.")
-		else		 console.warn("BOO!  Owen is not able to upvote his topic again: ",success);
-	} catch (e) {
-		console.warn("BOO!  Owen is unable to upvote his topic again: ", e.reason || e);
-	}
-	var voteCount = Topics.findOne(landlordId).voteCount;
-	var voters = Topics.getVoters(landlordId);
-	if (voteCount === voters.length) {
-		console.info("YAY!  voteCount matches the number of voters ("+voteCount+").");
-	} else {
-		console.warn("BOO!  expected voteCount of ",voters.length,", found: ", voteCount);
-	}
+	smokeTest("Downvoting topic", TRUTHY, function() {
+		return Topics.downvoteTopic(owen, landlordId);
+	});
+	smokeTest("Upvoting topic again", TRUTHY, function() {
+		return Topics.upvoteTopic(owen, landlordId);
+	});
+
+	// make sure vote count is as expected
+	smokeTest("Vote count matches", TRUTHY, function() {
+		var voteCount = Topics.findOne(landlordId).voteCount;
+		var voters = Topics.getVoters(landlordId);
+		return (voteCount === voters.length);
+	});
 
 
 	//////////
@@ -238,55 +232,30 @@ END of description.",
 	console.info("Testing subscription");
 
 	// try to subscribe to a bogus topic
-	try {
-		var success = Topics.subscribeToTopic(bob, "BOGUS_TOPIC");
-		if (success) console.info("BOO!  Able to subscribe to a bogus topic!");
-		else		 console.warn("YAY!  Unable to subscribe to bogus topic.");
-	} catch (e) {
-		console.info("YAY!  Unable subscribe to bogus topic.  ", e.reason || e);
-	}
+	smokeTest("Subscribing to bogus topic", ERROR, function() {
+		return Topics.subscribeToTopic(bob, "BOGUS_TOPIC");
+	});
 
-	// subscribe bob to Owen's post
-	try {
-		var success = Topics.subscribeToTopic(bob, landlordId);
-		if (success) console.info("YAY!  Bob is able to subscribe to owen's topic.");
-		else		 console.warn("BOO!  Bob is unable to subscribe to owen's topic.");
-	} catch (e) {
-		console.warn("BOO!  Bob is unable to subscribe to owen's topic.", e.reason || e);
-	}
-
-	var subscribers = Topics.getSubscribers(landlordId);
-	if (subscribers.length === 2) {
-		console.info("YAY!  2 subscribers to topic as expected.");
-	} else {
-		console.warn("BOO!  Expected 2 subscribers to topic, found ",subscribers.length, " data:",subscribers);
-	}
+	// subscribe bob to Owen's topic
+	smokeTest("Subscribe to other's topic", TRUTHY, function() {
+		return Topics.subscribeToTopic(bob, landlordId);
+	});
+	smokeTest("# of subscribers as expected", 2, function() {
+		return Topics.getSubscribers(landlordId).length;
+	});
 
 	// have owen try to subscribe to his own topic -- which should fail.
-	try {
-		var success = Topics.subscribeToTopic(owen, landlordId);
-		if (success) console.warn("BOO!  Owen is able to subscribe to his own topic twice.")
-		else		 console.info("YAY!  Owen is not able to subscribe to his own topic twice: ",success);
-	} catch (e) {
-		console.info("YAY!  Owen is unable to subscribe to his topic: ", e.reason || e);
-	}
+	smokeTest("Subscribe to own topic", FALSY, function() {
+		return Topics.subscribeToTopic(owen, landlordId);
+	});
 
 	// have owen unsubscribe from  his topic, then subscribe to it again
-	try {
-		var success = Topics.unsubscribeFromTopic(owen, landlordId);
-		if (success) console.info("YAY!  Owen is able to unsubscribe from his topic.")
-		else		 console.warn("BOO!  Owen is not able to unsubscribe from his topic: ",success);
-	} catch (e) {
-		console.info("BOO!  Owen is unable to unsubscribe from his topic: ", e.reason || e);
-	}
-	try {
-		var success = Topics.subscribeToTopic(owen, landlordId);
-		if (success) console.info("YAY!  Owen is able to subscribe to his topic again.")
-		else		 console.warn("BOO!  Owen is not able to subscribe to his topic again: ",success);
-	} catch (e) {
-		console.warn("BOO!  Owen is unable to subscribe to his topic again: ", e.reason || e);
-	}
-
+	smokeTest("Unsubscribe from topic", TRUTHY, function() {
+		return Topics.unsubscribeFromTopic(owen, landlordId);
+	});
+	smokeTest("Subscribe to topic again", TRUTHY, function() {
+		return Topics.subscribeToTopic(owen, landlordId);
+	});
 
 
 
@@ -296,34 +265,18 @@ END of description.",
 
 	console.info("Testing comments");
 	// try to comment on a bogus topic
-	try {
-		var success = TopicComments.createComment("BOGUS_TOPIC", {comment:"YAY!"}, owen);
-		if (success) console.info("BOO!  Able to comment on a bogus topic!");
-		else		 console.warn("YAY!  Unable to comment on bogus topic.");
-	} catch (e) {
-		console.info("YAY!  Unable comment on bogus topic.  ", e.reason || e);
-	}
+	smokeTest("Commenting on bogus topic", ERROR, function() {
+		return TopicComments.createComment("BOGUS_TOPIC", {comment:"Yay!"}, owen);
+	});
 
-	// have Bob comment on owen's post 2 times
-	try {
-		var success = TopicComments.createComment(landlordId, {comment:"YAY 2!"}, bob);
-		if (success) console.info("YAY!  Bob is able to comment on owen's topic.");
-		else		 console.warn("BOO!  Bob is unable to comment on owen's topic.");
-	} catch (e) {
-		console.warn("BOO!  Bob is unable to comment on owen's topic.", e.reason || e);
-	}
-	try {
-		var success = TopicComments.createComment(landlordId, {comment:"YAY 3!"}, bob);
-		if (success) console.info("YAY!  Bob is able to comment on owen's topic.");
-		else		 console.warn("BOO!  Bob is unable to comment on owen's topic.");
-	} catch (e) {
-		console.warn("BOO!  Bob is unable to comment on owen's topic.", e.reason || e);
-	}
-
-	var commentCount = Topics.findOne(landlordId).commentCount;
-	if (commentCount === 2) {
-		console.info("YAY!  2 comments on topic as expected.");
-	} else {
-		console.warn("BOO!  Expected 2 comments on topic, found ",commentCount);
-	}
+	// have Bob comment on owen's topic 2 times
+	smokeTest("Commenting on other's topic", TRUTHY, function() {
+		return TopicComments.createComment(landlordId, {comment:"YAY 2!"}, bob);
+	});
+	smokeTest("Commenting on other's topic again", TRUTHY, function() {
+		return TopicComments.createComment(landlordId, {comment:"YAY 3!"}, bob);
+	});
+	smokeTest("# of comments as expected", 2, function() {
+		return Topics.findOne(landlordId).commentCount;
+	});
 }
