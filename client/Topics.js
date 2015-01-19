@@ -280,7 +280,7 @@ Template.mergeTopics.events({
 		// NOTE: `this` is the existing topic
 		e.preventDefault();
 
-		var parentTopicId = this._id;
+		var parentTopicId = this.parent_topic._id;
 		var childTopicId = $(e.target).find("[name=childTopicId]").val().trim();
 
 		// if field is empty, go back to topic's page
@@ -302,7 +302,7 @@ Template.mergeTopics.events({
 	"click .cancel":function(e) {
 		// `this` is the existing topic
 		e.preventDefault();
-		var currentTopicId = this._id;
+		var currentTopicId = this.parent_topic._id;
 		Router.go("topicPage", {_id:currentTopicId});
 	},
 });

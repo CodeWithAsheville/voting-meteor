@@ -251,12 +251,16 @@
 	<form class="main form">
 		<div class="form-group {{errorClass 'title'}}">
 			<label class="control-label" for="title">Topic to keep:</label>
-			<input class="form-control" type="text" disabled value='{{title}}' />
+			<input class="form-control" type="text" disabled value='{{parent_topic.title}}' />
 		</div>
 		<div class="form-group {{errorClass 'description'}}">
 			<label class="control-label" for="description">Topic to merge with the above</label>
 			<div class="controls">
-				<input name="childTopicId" id="childTopicId" type="text" placeholder="ID of the child topic" class="form-control"/>
+				<select name="childTopicId" id="childTopicId" class="form-control" >
+				  {{#each topics}}
+				    <option value="{{_id}}">{{title}}</option>
+				  {{/each}}
+				</select>
 				<span class='help-block'>{{errorMessage 'childTopicId'}}</span>
 			</div>
 		</div>
