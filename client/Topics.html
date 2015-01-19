@@ -41,6 +41,24 @@
 <template name="topicItem">
 	<div class="topic col-lg-3 col-md-4 col-sm-6 col-xs-12">
 		<div class="topic-content">
+			<div class='vote-count-big'>
+				<div class='vote-count'>
+					{{pluralize voteCount "vote" "votes"}}
+				</div>
+				<div>
+				{{#if hasAlreadyVoted}}
+					<a href="#" class="voteBtn alreadyVoted btn btn-default disabled">
+						Voted!
+						<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+					</a>
+				{{else}}
+					<a href="#" class="voteBtn upvote btn btn-default">
+						Vote Up
+						<span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+					</a>
+				{{/if}}
+				</div>
+			</div>
 			<h3><a href="{{pathFor 'topicPage'}}">{{title}}</a></h3>
 			<span class="byline">submitted by {{author}}</span>
 			<p>"{{trimString description 100}}"</p>
