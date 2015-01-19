@@ -32,7 +32,9 @@
 			<div class='details'>
 				{{pluralize voteCount "vote" "votes"}} |
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
-				{{tagsList 20}}
+				<div class="tag-list">
+					<b>Tags:</b> {{tagsList 30}}
+				</div>
 			</div>
 		</div>
 		{{#if isLoggedIn}}
