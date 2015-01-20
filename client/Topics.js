@@ -59,6 +59,18 @@ var itemHelpers = {
 		if (!tags) return (showNone ? "(none)" : "");
 		if (charLimit && tags.length > charLimit) tags = tags.substr(0, (charLimit-3)) + "...";
 		return tags;
+	},
+
+	topicLevelClass : function(voteCount){
+		if(voteCount == 1){
+			return 'topic-level-0';
+		}
+		else if(voteCount == 2){
+			return 'topic-level-5';
+		}
+		else{
+			return 'topic-level-10';
+		}
 	}
 };
 Template.topicItem.helpers(itemHelpers);

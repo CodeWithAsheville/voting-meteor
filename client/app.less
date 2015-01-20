@@ -265,3 +265,28 @@ ul.comments {
 	border-radius: 3px;
 	text-align: center;
 }
+
+
+@flat-web-pomegranate: rgba(192, 57, 43,0.5);
+@flat-web-nephritis: rgba(39, 174, 96,1.0);
+@flat-web-peter-river: rgba(52, 152, 219,0.5);
+
+@complement1: spin(@flat-web-pomegranate, 180);
+@complement2: darken(spin(@flat-web-pomegranate, 180), 5%);
+
+
+.topic-level-10{
+	background: @flat-web-pomegranate;
+	border: 2px solid darken(@flat-web-pomegranate, 20%);
+	color: darken(spin(@flat-web-pomegranate, 180), 90%);
+}
+
+.topic-level-5{
+	background: @flat-web-nephritis;
+	border: 2px solid darken(@flat-web-nephritis, 20%);
+}
+
+.topic-level-0{
+	background: @flat-web-peter-river;
+	border: 2px solid darken(@flat-web-peter-river, 20%);
+}
