@@ -206,6 +206,14 @@
 			{{> topicTagsSelector }}
 		</div>
 	</div>
+	{{#if isAdmin}}
+		<div class="form-group">
+			<label class="control-label">Other categories (admin only):</label>
+			<div class="controls">
+				<input name="otherTags" id="tags" type="text" value="{{otherTags}}" placeholder="Other tags (comma separated)" class="form-control"/>
+			</div>
+		</div>
+	{{/if}}
 </template>
 
 
