@@ -1,41 +1,23 @@
 <!-- list of topics -->
 <template name="topics">
-	<h1>Suggested Data Sets</h1>
-	<div class='topic-nav-container'>
-		<ul class="nav navbar-nav">
-			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-					Sort
-					<b class="caret"></b>
-				</a>
-
-				<ul class="dropdown-menu">
-					<li>
-						<a href="{{pathFor 'topics'}}">Newest</a>
-					</li>
-					<li>
-						<a href="{{pathFor 'topTopics'}}">Top Voted</a>
-					</li>
-				</ul>
-
-			</li>
-		</ul>
-	</div>
+	<h1>{{viewTitle}}</h1>
 	<div class="topics">
 		{{#each topics}}
 			{{> topicItem}}
 		{{/each}}
-<!--
-		{{#if loadMorePath}}
-			<a class="load-more" href="{{loadMorePath}}">Load more</a>
-		{{else}}
-			{{#unless ready}}
-				{{> spinner}}
-			{{/unless}}
-		{{/if}}
--->
 	</div>
+
+	{{#if isView 'topicsForTag'}}
+		<h3 class='tag-cloud-title'><a href='{{pathFor 'allTopics'}}'>All Categories</a>:</h3>
+		{{> tagCloud }}
+<!--		<div class='pull-right'>
+			<a href='{{pathFor 'allTopics'}}'>Show All Topics</a>
+		</div>
+-->
+	{{/if}}
 </template>
+
+
 
 <!-- single topic in a list view -->
 <template name="topicItem">
@@ -54,7 +36,7 @@
 				{{pluralize voteCount "vote" "votes"}} |
 				<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
 				<div class="tag-list">
-					<b>Tags:</b> {{tagsList 30}}
+					<b>Categories:</b> {{{tagsList 30 "<em>(none)</em>"}}}
 				</div>
 			</div>
 		</div>
@@ -136,7 +118,7 @@
 					{{pluralize voteCount "vote" "votes"}} |
 					<a href="{{pathFor 'topicPage'}}">{{pluralize commentCount "comment" "comments"}}</a>
 					<div class='tags'>
-						<label>Tags:</label> {{tagsList 0 "SHOW_NONE"}}
+						<label>Categories:</label> {{{tagsList 0 "SHOW_NONE"}}}
 					</div>
 				</div>
 			{{/if}}
@@ -219,31 +201,9 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="control-label">Tags:</label>
+		<label class="control-label">Categories:</label>
 		<div class="controls">
-			<div class="row">
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Animals" checked="{{hasTag 'Animals'}}"/> Animals & Pets</label>
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Budget" checked="{{hasTag 'Budget'}}"/> City Budget</label>
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Civic Jobs" checked="{{hasTag 'Civic Jobs'}}"/> Civic Jobs</label>
-			</div>
-			<div class="row">
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Crime" checked="{{hasTag 'Crime'}}"/> Crime</label>
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Elections" checked="{{hasTag 'Elections'}}"/> Elections</label>
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Housing" checked="{{hasTag 'Housing'}}"/> Housing</label>
-			</div>
-			<div class="row">
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Inspections" checked="{{hasTag 'Inspections'}}"/> Inspections</label>
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Parking" checked="{{hasTag 'Parking'}}"/> Parking</label>
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Parks" checked="{{hasTag 'Parks'}}"/> Parks</label>
-			</div>
-			<div class="row">
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Public Transportation" checked="{{hasTag 'Public Transportation'}}"/> Public Transportation</label>
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Water" checked="{{hasTag 'Water'}}"/> Water</label>
-				<label class="tag col-xs-4"><input type="checkbox" class="tag" value="Zoning" checked="{{hasTag 'Zoning'}}"/> Zoning</label>
-			</div>
-			{{#if isAdmin}}
-				<input name="otherTags" id="tags" type="text" value="{{otherTags}}" placeholder="Other tags (comma separated)" class="form-control"/>
-			{{/if}}
+			{{> topicTagsSelector }}
 		</div>
 	</div>
 </template>

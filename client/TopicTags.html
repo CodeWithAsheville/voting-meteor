@@ -1,0 +1,36 @@
+<!-- list of topics -->
+<template name="topicTags">
+	<h1>Show topics for category:</h1>
+	{{> tagCloud }}
+</template>
+
+
+<template name='tagCloud'>
+	<div class="tag-cloud">
+		{{#each allTags}}
+			{{> tagCloudItem}}
+		{{/each}}
+	</div>
+</template>
+
+<template name='tagCloudItem'>
+	<div class='tag-cloud-item {{tagSelected}}' size='{{tagSize}}'>
+		<a href='{{tagAnchor}}'>{{tagTitle}}</a> {{maxTagCount}}
+	</div>
+</template>
+
+
+<template name='topicTagsSelector'>
+	<select name="tags" id="tagSelector" class="form-control" multiple >
+		{{{titledTagsOptions}}}
+	</select>
+	<!-- TODO: there must be a better way to do this! -->
+	<script type='text/javascript'>
+		$(document).ready(function(){
+			$("#tagSelector").chosen({
+				placeholder_text_multiple : "Click to choose categories"
+
+			});
+		});
+	</script>
+</template>

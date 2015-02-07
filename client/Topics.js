@@ -5,6 +5,10 @@
 //////////////////////////////
 Template.topics.helpers({
 
+	// Are we showing a particular view?
+	isView : function(viewName) {
+		return this.viewName === viewName;
+	}
 });
 
 
@@ -54,11 +58,34 @@ var itemHelpers = {
 		return subscriptions.indexOf(this._id) > -1;
 	},
 
-	tagsList : function(charLimit, showNone) {
-		var tags = (this.tags || []).join(", ");
-		if (!tags) return (showNone ? "(none)" : "");
-		if (charLimit && tags.length > charLimit) tags = tags.substr(0, (charLimit-3)) + "...";
-		return tags;
+	// Return tags
+	tagsList : function(charLimit, noneMessage) {
+		var tags = (this.tags || []);
+
+		// return the `noneMessage` if the list is empty.
+		if (tags.length === 0 && noneMessage) return noneMessage;
+
+		var charsSoFar = 0;
+		var tagAnchors = [];
+		tags.forEach(function(tag, index) {
+			// figure out the number of characters we've output so far
+			charsSoFar += tag.length;
+			if (charLimit !== 0 && charsSoFar > charLimit) {
+				// always output at least one tag
+				if (index !== 0) return;
+			}
+			// add chars for the comma and space for the next round
+			if (index !== 0) charsSoFar += 2;
+
+			var destination = Router.routes.topicsForTag.path({tags: tag});
+			var anchor = "<a href='" + destination + "'>" + tag + "</a>";
+			tagAnchors.push(anchor);
+		}, this);
+
+		var results = tagAnchors.join(", ");
+		if (tagAnchors.length < tags.length) results += ", ...";
+
+		return results;
 	}
 };
 Template.topicItem.helpers(itemHelpers);
@@ -169,12 +196,10 @@ Template.topicFormControls.getTopicFormValues = function($form) {
 		referenceUrl	: $form.find("[name=referenceUrl]").val()
 	};
 
-	// Get tags from checkboxen and otherTags field
-	var tags = TopicTags.splitTags($form.find("[name=otherTags]").val());
-	$form.find("input.tag[type=checkbox]").each(function(index, checkbox) {
-		if (checkbox.checked) tags.push(checkbox.getAttribute("value"));
-	});
-	properties.tags = tags.sort();
+	// Get tags from normal tags and other tags field
+	var tags = TopicTags.splitTags($form.find("[name=tags]").val());
+	var otherTags = TopicTags.splitTags($form.find("[name=otherTags]").val());
+	properties.tags = tags.concat(otherTags).sort();
 
 	return properties;
 }

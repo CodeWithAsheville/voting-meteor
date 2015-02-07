@@ -199,6 +199,66 @@ ul.comments {
 }
 
 
+
+//////////////////////////////////
+//
+//	Tag cloud
+//
+//////////////////////////////////
+
+.tag-cloud {
+	clear:both;
+	position:relative;
+	width:50%;
+	text-align:center;
+	border:1px solid black;
+	font-size:20px;
+	padding:10px;
+
+	.tag-cloud-item {
+		display:inline;
+		padding:2px;
+
+		&.selected {
+			text-shadow:0 0 5px goldenrod;
+		}
+
+		&[size='0']	{	font-size:  80%;	}
+		&[size='1']	{	font-size:  90%;	}
+		&[size='2']	{	font-size:  100%;	}
+		&[size='3']	{	font-size:  120%;	}
+		&[size='4']	{	font-size:  150%;	}
+	}
+}
+
+.tag-cloud-title {
+	clear:both;
+	padding-top: 2em;
+}
+
+
+//////////////////////////////////
+//
+//	"chosen" select enhancer overrides
+//	See:  http://harvesthq.github.io/chosen/
+//
+//////////////////////////////////
+
+.chzn-container-multi {
+	.chzn-choices {
+		min-height:30px;
+		padding-left:2px;
+		.search-choice {
+			margin:5px 2px;
+		}
+
+		.search-field input {
+			min-height:30px;
+			cursor:pointer;
+		}
+	}
+}
+
 //////////////////////////////////
 //
 //	Error display
